@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NLH-645-050537" Class="NHL_DataDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=CABANONS00006V;Initial Catalog=NLH-645-050537;Integrated Security=True" SettingsObjectName="HLN_645_050537.Properties.Settings" SettingsPropertyName="NLH_645_050537ConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.AdmissionRecords" Member="AdmissionRecords">
+    <Type Name="AdmissionRecord">
+      <Column Name="AdmissionID" Type="System.String" DbType="NChar(30) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="PatientID" Type="System.String" DbType="NChar(15) NOT NULL" CanBeNull="false" />
+      <Column Name="BedNumber" Type="System.String" DbType="NChar(3)" CanBeNull="true" />
+      <Column Name="SurgeryScheduled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AdmitDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="SurgeryDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DischargeDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="AdmissionRecord_Extra" Member="Extra" ThisKey="AdmissionID" OtherKey="AdmissionRecordID" Type="Extra" Cardinality="One" />
+      <Association Name="Bed_AdmissionRecord" Member="Bed" ThisKey="BedNumber" OtherKey="BedNumber" Type="Bed" IsForeignKey="true" />
+      <Association Name="Patient_AdmissionRecord" Member="Patient" ThisKey="PatientID" OtherKey="HealthNumber" Type="Patient" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Beds" Member="Beds">
+    <Type Name="Bed">
+      <Column Name="BedNumber" Type="System.String" DbType="NChar(3) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="BedType" Type="System.String" DbType="NChar(15)" CanBeNull="true" />
+      <Column Name="Occupied" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="WardName" Type="System.String" DbType="NChar(15)" CanBeNull="true" />
+      <Association Name="Bed_AdmissionRecord" Member="AdmissionRecords" ThisKey="BedNumber" OtherKey="BedNumber" Type="AdmissionRecord" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Extra_Rates" Member="Extra_Rates">
+    <Type Name="Extra_Rate">
+      <Column Name="AmenityName" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="DailyCost" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Extras" Member="Extras">
+    <Type Name="Extra">
+      <Column Name="PatientID" Type="System.String" DbType="NChar(15) NOT NULL" CanBeNull="false" />
+      <Column Name="AdmissionRecordID" Type="System.String" DbType="NChar(30) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="TV" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Phone" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="SemiPriivate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Private" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="AdmissionRecord_Extra" Member="AdmissionRecord" ThisKey="AdmissionRecordID" OtherKey="AdmissionID" Type="AdmissionRecord" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Login" Member="Logins">
+    <Type Name="Login">
+      <Column Name="UserName" Type="System.String" DbType="NChar(20)" CanBeNull="true" />
+      <Column Name="Password" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Patients" Member="Patients">
+    <Type Name="Patient">
+      <Column Name="HealthNumber" Type="System.String" DbType="NChar(15) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="DateOfBirth" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="LastName" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Column Name="FirstName" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="NChar(50)" CanBeNull="true" />
+      <Column Name="City" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Column Name="Province" Type="System.String" DbType="NChar(15)" CanBeNull="true" />
+      <Column Name="PostalCode" Type="System.String" DbType="NChar(7)" CanBeNull="true" />
+      <Column Name="Phone" Type="System.String" DbType="NChar(14)" CanBeNull="true" />
+      <Column Name="InsuranceCompany" Type="System.Char" DbType="NChar(1)" CanBeNull="true" />
+      <Column Name="InsuranceNumber" Type="System.String" DbType="NChar(15)" CanBeNull="true" />
+      <Column Name="NextOfKin" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Column Name="NextOfKinRelationship" Type="System.String" DbType="NChar(10)" CanBeNull="true" />
+      <Column Name="Doctor" Type="System.String" DbType="NChar(4)" CanBeNull="true" />
+      <Association Name="Patient_AdmissionRecord" Member="AdmissionRecords" ThisKey="HealthNumber" OtherKey="PatientID" Type="AdmissionRecord" />
+      <Association Name="Doctor_Patient" Member="Doctor1" ThisKey="Doctor" OtherKey="DoctorID" Type="Doctor" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Specialty" Member="Specialties">
+    <Type Name="Specialty">
+      <Column Name="SpecialtyID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Specialty" Member="Specialty1" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Association Name="Specialty_Doctor" Member="Doctors" ThisKey="SpecialtyID" OtherKey="Specialty" Type="Doctor" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Doctors" Member="Doctors">
+    <Type Name="Doctor">
+      <Column Name="DoctorID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="LastName" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Column Name="FirstName" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Column Name="Specialty" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Doctor_Patient" Member="Patients" ThisKey="DoctorID" OtherKey="Doctor" Type="Patient" />
+      <Association Name="Specialty_Doctor" Member="Specialty1" ThisKey="Specialty" OtherKey="SpecialtyID" Type="Specialty" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.InsereDocteur" Method="InsereDocteur">
+    <Parameter Name="Id" Parameter="id" Type="System.String" DbType="NChar(4)" />
+    <Parameter Name="LastName" Parameter="lastName" Type="System.String" DbType="NChar(30)" />
+    <Parameter Name="FirstName" Parameter="firstName" Type="System.String" DbType="NChar(30)" />
+    <Parameter Name="Specialty" Parameter="specialty" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+</Database>
