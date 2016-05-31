@@ -23,6 +23,7 @@ namespace HLN_645_050537
         public string SelectedSpecialty { get; set; }
 
         NHL_DataDataContext context = new NHL_DataDataContext("Data Source = CABANONS00006V; Initial Catalog = NLH-645-050537; Integrated Security = True");
+        //NHL_DataDataContext context = new NHL_DataDataContext("Data Source = ANDRE-PC; Initial Catalog = NLH-645-050537; Integrated Security = True");
 
         public MenuPrincipale()
         {
@@ -51,6 +52,7 @@ namespace HLN_645_050537
         {
             HideAll();
             ZonePreposer.Visibility = Visibility.Visible;
+            ZonePreposerGestion.Visibility = Visibility.Visible;
         }
 
         private void HideAll()
@@ -61,6 +63,7 @@ namespace HLN_645_050537
             ZonePreposer.Visibility = Visibility.Collapsed;
             ZoneAdminGereDocteur.Visibility = Visibility.Collapsed;
             ZoneAdminGereFacture.Visibility = Visibility.Collapsed;
+            ZonePreposerGestion.Visibility = Visibility.Collapsed;
         }
 
         private void SwtichAll_Click(object sender, RoutedEventArgs e)
@@ -162,6 +165,86 @@ namespace HLN_645_050537
                 MessageBox.Show("Erreur de connection a la base de donnée");
             }
             return myDoctorList;
+        }
+
+        private void btnModifDocteur_Click(object sender, RoutedEventArgs e)
+        {
+            Doctor mySelectedDoc = (Doctor)ListeDesDocteurs.SelectedItem;
+            
+            var query = from doc in context.Doctors
+                        where doc.DoctorID == mySelectedDoc.DoctorID
+                        select doc;
+            if (query != null)
+            {
+                if (query.Count() == 1)
+                {
+                    query.FirstOrDefault().DoctorID = tbAdminGereDocId.Text;
+                    query.FirstOrDefault().FirstName = tbAdminGereDocPrenom.Text;
+                    query.FirstOrDefault().LastName = tbAdminGereDocNom.Text;
+                    query.FirstOrDefault().Specialty = ((Specialty)comboSpecialtyListe.SelectedItem).SpecialtyID;
+
+                    try
+                    {
+                        //comit les changement et re-init le formulaire
+                        context.SubmitChanges();
+
+                        tbAdminGereDocId.Text = "";
+                        tbAdminGereDocPrenom.Text = "";
+                        tbAdminGereDocNom.Text = "";
+                        comboSpecialtyListe.SelectedIndex = -1;
+
+                        MessageBox.Show("Doctueur modifié");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                    
+                }
+                if (query.Count() > 1)
+                {
+                    MessageBox.Show("Erreur plus d'un docteur a avec le meme ID a été trouvé");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vous devez selectionner un docteur a modifier");
+            }
+        }
+
+        private void btnSuprimeDocteur_Click(object sender, RoutedEventArgs e)
+        {
+            Doctor mySelectedDoc = (Doctor)ListeDesDocteurs.SelectedItem;
+
+            var query = from doc in context.Doctors
+                        where doc.DoctorID == mySelectedDoc.DoctorID
+                        select doc;
+
+            if (query != null)
+            {
+                foreach (var item in query)
+                {
+                    context.Doctors.DeleteOnSubmit(item);
+                }
+            }
+            try
+            {
+                context.SubmitChanges();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                ListeDesDocteurs.DataContext = GetAllDoctors();
+            }
+           
+        }
+
+        private void PreposerPatient_Click(object sender, RoutedEventArgs e)
+        {
+            ZoneGestionPatient.Visibility = Visibility.Visible;
         }
     }
 }

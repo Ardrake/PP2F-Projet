@@ -63,33 +63,34 @@
             <StackPanel Orientation="Vertical" Margin="5,0,0,30">
                 <TextBlock Height="50" Text="Menu Préposé" />
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button x:Name="PreposerPatient" Content=" Patients " Width="160" Height="60" Margin="5"/>
+                    <Button x:Name="PreposerPatient" Content=" Patients " Width="160" Height="60" Margin="5" Click="PreposerPatient_Click"/>
                     <Button x:Name="PreposerAdmission" Content=" Admission " Width="160" Height="60" Margin="5"/>
                 </StackPanel>
             </StackPanel>
         </Border>
-
-        <Border x:Name="ZoneAdminGereDocteur" Grid.Row="1" Grid.RowSpan="3" Grid.Column="2" Grid.ColumnSpan="2" Visibility="Visible" BorderBrush="Red" BorderThickness="2" Margin="2" Width="600">
+        <Border x:Name="ZoneAdminGereDocteur" Grid.Row="1" Grid.RowSpan="3" Grid.Column="2" Grid.ColumnSpan="2" Visibility="Hidden" BorderBrush="Red" BorderThickness="2" Margin="2" Width="600">
             <StackPanel Orientation="Vertical" Margin="5">
                 <TextBlock Text="Menu Gestion des medecin" />
                 <Separator Margin="0,0,0,10"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Label Content="Identification" Width="100"/>
-                    <TextBox x:Name="tbAdminGereDocId" Text="{Binding ElementName=ListeDesDocteurs, Path=SelectedItem.DoctorID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+                    <TextBox x:Name="tbAdminGereDocId" Text="{Binding ElementName=ListeDesDocteurs, Path=SelectedItem.DoctorID, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
                     <Button x:Name="btnInsereDocteur"  Margin="150,0,0,0" Content="Inseré" HorizontalAlignment="Right" Width="80" Click="btnInsereDocteur_Click"  />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Label Content="Nom" Width="100"/>
-                    <TextBox x:Name="tbAdminGereDocNom" Text="{Binding ElementName=ListeDesDocteurs, Path=SelectedItem.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+                    <TextBox x:Name="tbAdminGereDocNom" Text="{Binding ElementName=ListeDesDocteurs, Path=SelectedItem.LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Label Content="Prénom" Width="100"/>
-                    <TextBox x:Name="tbAdminGereDocPrenom" Text="{Binding ElementName=ListeDesDocteurs, Path=SelectedItem.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+                    <TextBox x:Name="tbAdminGereDocPrenom" Text="{Binding ElementName=ListeDesDocteurs, Path=SelectedItem.FirstName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+                    <Button x:Name="btnModifDocteur"  Margin="150,0,0,0" Content="Modifié" HorizontalAlignment="Right" Width="80" Click="btnModifDocteur_Click" />
                 </StackPanel>
                 <Label Content=""/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Label Content="Specialité: " Width="100"/>
-                    <ComboBox x:Name="comboSpecialtyListe" Width="200" ItemsSource="{Binding}" DisplayMemberPath="Specialty1" SelectedItem="{Binding SelectedSpecialty}" SelectedValue="{Binding ElementName=ListeDesDocteurs, Path=SelectedItem.Specialty1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <ComboBox x:Name="comboSpecialtyListe" Width="200" ItemsSource="{Binding}" DisplayMemberPath="Specialty1" SelectedItem="{Binding SelectedSpecialty}" SelectedValue="{Binding ElementName=ListeDesDocteurs, Path=SelectedItem.Specialty1, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button x:Name="btnSuprimeDocteur"  Margin="150,0,0,0" Content="Suprimé" HorizontalAlignment="Right" Width="80" Click="btnSuprimeDocteur_Click" />
                 </StackPanel>
                 <Label Content=""/>
                 <DataGrid x:Name="ListeDesDocteurs" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsReadOnly="True">
@@ -134,6 +135,64 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Label Content="Liste des factures" Width="100"/>
                 </StackPanel>
+            </StackPanel>
+        </Border>
+        <Border x:Name="ZonePreposerGestion" Grid.Row="1" Grid.RowSpan="3" Grid.Column="2" Grid.ColumnSpan="10" Visibility="Visible" BorderBrush="DarkOrange" BorderThickness="2" Margin="2" Width="600">
+            <StackPanel x:Name="ZoneGestionPatient" Orientation="Vertical" Margin="5" Visibility="Visible">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="# Assurance :" Width="100" />
+                    <TextBox x:Name="tbNumeroAssurance" Width="150"/>
+                    <Label Content="Cie Assurance: " Width="100"/>
+                    <TextBox x:Name="tbCieAssurance" Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Nom :" Width="100"/>
+                    <TextBox x:Name="tbNomPatien" Width="150"></TextBox>
+                    <Label Content="Prénom :" Width="100"/>
+                    <TextBox x:Name="tbPrenomPatient" Width="150"/>
+                </StackPanel>
+                <Label Content=""/>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Addresse :" Width="100"/>
+                    <TextBox x:Name="tbAddressePatient" Width="250" />
+                    <Label Content="Médecin" Margin="10,0"/>
+                    <ComboBox Width="150">
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Ville: " Width="100"/>
+                    <TextBox x:Name="tbVillePatient" Width="250"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Province :" Width="100"/>
+                    <TextBox x:Name="tbProvincePatient" Width="125"/>
+                    <Label Content="C.P.: "/>
+                    <TextBox x:Name="tbCPPatient" Width="90"/>
+                    <Label Content="Contact : "/>
+                    <TextBox x:Name="tbContactPatient" Width="170" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Téléphone : " Width="100"/>
+                    <TextBox x:Name="tbtelPatient" Width="150"/>
+                    <Label Content="Lien : " Margin="100,0,20,0"/>
+                    <ComboBox Width="170">
+                        <ComboBoxItem Content="Mère"/>
+                        <ComboBoxItem Content="Père"/>
+                        <ComboBoxItem Content="Frère"/>
+                        <ComboBoxItem Content="Soeur"/>
+                        <ComboBoxItem Content="Grand Mre"/>
+                        <ComboBoxItem Content="Grand Père"/>
+                        <ComboBoxItem Content="Oncle"/>
+                        <ComboBoxItem Content="Tante"/>
+                        <ComboBoxItem Content="Ami"/>
+                        <ComboBoxItem Content="Autre"/>
+                    </ComboBox>
+                </StackPanel>
+                <Separator Margin="10,20,0,0"/>
+                <Label Content="Liste des clients: " />
+                <DataGrid x:Name="DatagridPatient">
+                    
+                </DataGrid>
             </StackPanel>
         </Border>
 
