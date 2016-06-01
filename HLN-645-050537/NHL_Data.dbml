@@ -46,6 +46,16 @@
       <Column Name="Password" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Doctors" Member="Doctors">
+    <Type Name="Doctor">
+      <Column Name="DoctorID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="LastName" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Column Name="FirstName" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Column Name="Specialty" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Doctor_Patient" Member="Patients" ThisKey="DoctorID" OtherKey="Doctor" Type="Patient" />
+      <Association Name="Specialty_Doctor" Member="Specialty1" ThisKey="Specialty" OtherKey="SpecialtyID" Type="Specialty" IsForeignKey="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.Patients" Member="Patients">
     <Type Name="Patient">
       <Column Name="HealthNumber" Type="System.String" DbType="NChar(15) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -57,7 +67,7 @@
       <Column Name="Province" Type="System.String" DbType="NChar(15)" CanBeNull="true" />
       <Column Name="PostalCode" Type="System.String" DbType="NChar(7)" CanBeNull="true" />
       <Column Name="Phone" Type="System.String" DbType="NChar(14)" CanBeNull="true" />
-      <Column Name="InsuranceCompany" Type="System.Char" DbType="NChar(1)" CanBeNull="true" />
+      <Column Name="InsuranceCompany" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
       <Column Name="InsuranceNumber" Type="System.String" DbType="NChar(15)" CanBeNull="true" />
       <Column Name="NextOfKin" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
       <Column Name="NextOfKinRelationship" Type="System.String" DbType="NChar(10)" CanBeNull="true" />
@@ -71,16 +81,6 @@
       <Column Name="SpecialtyID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Specialty" Member="Specialty1" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
       <Association Name="Specialty_Doctor" Member="Doctors" ThisKey="SpecialtyID" OtherKey="Specialty" Type="Doctor" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Doctors" Member="Doctors">
-    <Type Name="Doctor">
-      <Column Name="DoctorID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="LastName" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
-      <Column Name="FirstName" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
-      <Column Name="Specialty" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="Doctor_Patient" Member="Patients" ThisKey="DoctorID" OtherKey="Doctor" Type="Patient" />
-      <Association Name="Specialty_Doctor" Member="Specialty1" ThisKey="Specialty" OtherKey="SpecialtyID" Type="Specialty" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.InsereDocteur" Method="InsereDocteur">

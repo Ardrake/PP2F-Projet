@@ -52,7 +52,6 @@ namespace HLN_645_050537
         {
             HideAll();
             ZonePreposer.Visibility = Visibility.Visible;
-            ZonePreposerGestion.Visibility = Visibility.Visible;
         }
 
         private void HideAll()
@@ -63,7 +62,11 @@ namespace HLN_645_050537
             ZonePreposer.Visibility = Visibility.Collapsed;
             ZoneAdminGereDocteur.Visibility = Visibility.Collapsed;
             ZoneAdminGereFacture.Visibility = Visibility.Collapsed;
-            ZonePreposerGestion.Visibility = Visibility.Collapsed;
+            PreposerGestionPatient.Visibility = Visibility.Collapsed;
+            DocteurCongePatient.Visibility = Visibility.Collapsed;
+            InfirmiereListeDesPatients.Visibility = Visibility.Collapsed;
+            PreposerAdmissionPatient.Visibility = Visibility.Collapsed;
+            
         }
 
         private void SwtichAll_Click(object sender, RoutedEventArgs e)
@@ -87,6 +90,21 @@ namespace HLN_645_050537
         {
             ZoneAdminGereDocteur.Visibility = Visibility.Collapsed;
             ZoneAdminGereFacture.Visibility = Visibility.Visible;
+        }
+
+        private void PreposerPatient_Click(object sender, RoutedEventArgs e)
+        {
+            PreposerGestionPatient.Visibility = Visibility.Visible;
+            PreposerAdmissionPatient.Visibility = Visibility.Collapsed;
+            DocteurListe.ItemsSource = GetAllDoctors();
+            ListeDesPatients.DataContext = GetAllPatient();
+
+        }
+
+        private void PreposerAdmission_Click(object sender, RoutedEventArgs e)
+        {
+            PreposerAdmissionPatient.Visibility = Visibility.Visible;
+            PreposerGestionPatient.Visibility = Visibility.Collapsed;
         }
 
         private void btnInsereDocteur_Click(object sender, RoutedEventArgs e)
@@ -167,6 +185,24 @@ namespace HLN_645_050537
             return myDoctorList;
         }
 
+        private ObservableCollection<Patient> GetAllPatient()
+        {
+            ObservableCollection<Patient> myPatientList = new ObservableCollection<Patient>();
+            try
+            {
+                var getlist = context.Patients;
+                foreach (var item in getlist)
+                {
+                    myPatientList.Add(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erreur de connection a la base de donnée " + ex.Message);
+            }
+            return myPatientList;
+        }
+
         private void btnModifDocteur_Click(object sender, RoutedEventArgs e)
         {
             Doctor mySelectedDoc = (Doctor)ListeDesDocteurs.SelectedItem;
@@ -242,9 +278,63 @@ namespace HLN_645_050537
            
         }
 
-        private void PreposerPatient_Click(object sender, RoutedEventArgs e)
+        private void PreposerInserePatient_Click(object sender, RoutedEventArgs e)
         {
-            ZoneGestionPatient.Visibility = Visibility.Visible;
+            Doctor mySelectedDoc = (Doctor)DocteurListe.SelectedItem;
+            MessageBox.Show("Insere patient ici " + mySelectedDoc.DoctorID);
+            
+        }
+
+        private void PreposerModifiePatient_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PreposerSupprimePatient_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnDocteurCongePatient_Click(object sender, RoutedEventArgs e)
+        {
+            DocteurCongePatient.Visibility = Visibility.Visible;
+        }
+
+        private void InfirmiereListePatient_Click(object sender, RoutedEventArgs e)
+        {
+            InfirmiereListeDesPatients.Visibility = Visibility.Visible;
+        }
+
+        private void ListeDesPatients_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
+            Patient mySelectedPatient = (Patient)ListeDesPatients.SelectedItem;
+            //MessageBox.Show("Selection changed" + mySelectedPatient.Doctor1.DoctorID);
+            DocteurListe.SelectedItem = mySelectedPatient.Doctor1;
+        }
+
+        private void DocteurListe_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
         }
     }
+
+    [ValueConversion(typeof(string), typeof(string))]
+    public class StringTrimmingConverter : IValueConverter
+    {
+        #region IValueConverter Members
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return value.ToString().Trim();
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return value;
+        }
+        #endregion
+    }
+
+
+
 }
+

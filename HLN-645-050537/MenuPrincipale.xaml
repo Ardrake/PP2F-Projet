@@ -6,6 +6,10 @@
         xmlns:local="clr-namespace:HLN_645_050537"
         mc:Ignorable="d"
         Title="MenuPrincipale" Height="800" Width="1000">
+    <Window.Resources>
+        <local:StringTrimmingConverter x:Key="converter"/>
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
@@ -46,7 +50,7 @@
             <StackPanel  Orientation="Vertical" Margin="5,0,0,30">
                 <TextBlock Height="50" Text="Menu Doctor" />
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button x:Name="DocteurCongePatient" Content=" Congé patient " Width="160" Height="60" Margin="5"/>
+                    <Button x:Name="btnDocteurCongePatient" Content=" Congé patient " Width="160" Height="60" Margin="5" Click="btnDocteurCongePatient_Click"/>
                 </StackPanel>
             </StackPanel>
             <!--</Expander>-->
@@ -55,7 +59,7 @@
             <StackPanel  Orientation="Vertical" Margin="5,0,0,30">
                 <TextBlock Height="50" Text="Menu Infirmière" />
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button x:Name="InfirmiereListePatient" Content=" Liste des patients " Width="160" Height="60" Margin="5"/>
+                    <Button x:Name="InfirmiereListePatient" Content=" Liste des patients " Width="160" Height="60" Margin="5" Click="InfirmiereListePatient_Click"/>
                 </StackPanel>
             </StackPanel>
         </Border>
@@ -64,11 +68,11 @@
                 <TextBlock Height="50" Text="Menu Préposé" />
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Button x:Name="PreposerPatient" Content=" Patients " Width="160" Height="60" Margin="5" Click="PreposerPatient_Click"/>
-                    <Button x:Name="PreposerAdmission" Content=" Admission " Width="160" Height="60" Margin="5"/>
+                    <Button x:Name="PreposerAdmission" Content=" Admission " Width="160" Height="60" Margin="5" Click="PreposerAdmission_Click"/>
                 </StackPanel>
             </StackPanel>
         </Border>
-        <Border x:Name="ZoneAdminGereDocteur" Grid.Row="1" Grid.RowSpan="3" Grid.Column="2" Grid.ColumnSpan="2" Visibility="Hidden" BorderBrush="Red" BorderThickness="2" Margin="2" Width="600">
+        <Border x:Name="ZoneAdminGereDocteur" Grid.Row="1" Grid.RowSpan="3" Grid.Column="2" Grid.ColumnSpan="2" Visibility="Visible" BorderBrush="Red" BorderThickness="2" Margin="2" Width="600">
             <StackPanel Orientation="Vertical" Margin="5">
                 <TextBlock Text="Menu Gestion des medecin" />
                 <Separator Margin="0,0,0,10"/>
@@ -106,14 +110,14 @@
                         <DataGridTemplateColumn Header="Nom">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding FirstName}"/>
+                                    <TextBlock Text="{Binding LastName}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>    
                         </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="Prénom">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding LastName}"/>
+                                    <TextBlock Text="{Binding FirstName}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -128,7 +132,7 @@
                 </DataGrid>
             </StackPanel>
         </Border>
-        <Border x:Name="ZoneAdminGereFacture" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Visibility="Hidden" BorderBrush="Red" BorderThickness="2" Margin="2" Width="200">
+        <Border x:Name="ZoneAdminGereFacture" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3" Visibility="Hidden" BorderBrush="Red" BorderThickness="2" Margin="2" Width="600">
             <StackPanel Orientation="Vertical" Margin="5">
                 <TextBlock Text="Menu Gestion des medecin" />
                 <Separator Margin="0,0,0,10"/>
@@ -137,43 +141,113 @@
                 </StackPanel>
             </StackPanel>
         </Border>
-        <Border x:Name="ZonePreposerGestion" Grid.Row="1" Grid.RowSpan="3" Grid.Column="2" Grid.ColumnSpan="10" Visibility="Visible" BorderBrush="DarkOrange" BorderThickness="2" Margin="2" Width="600">
-            <StackPanel x:Name="ZoneGestionPatient" Orientation="Vertical" Margin="5" Visibility="Visible">
+
+        <Border x:Name="DocteurCongePatient" Grid.Row="2" Grid.Column="2" Visibility="Visible" HorizontalAlignment="Left" BorderBrush="Green" BorderThickness="2" Margin="2" Width="600">
+            <!-- <Expander ExpandDirection="Left"> -->
+            <StackPanel  Orientation="Vertical" Margin="5,0,0,30">
+                <Label Content="Congé Patient"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Label Content="Liste des patient hospitaliser"/>
+                <Button Content="Authoriser congé" Margin="120,0" Width="150"/>
+            </StackPanel>
+                <Separator Margin="10,20,10,10"/>
+                <DataGrid x:Name="ListePatientHositaliser" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Id">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DoctorID}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Nom">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding LastName}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Prénom">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding FirstName}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+            </StackPanel>
+        </Border>
+
+        <Border x:Name="InfirmiereListeDesPatients" Grid.Row="3" Grid.Column="2" Visibility="Visible" HorizontalAlignment="Left" BorderBrush="Blue" BorderThickness="2" Margin="2" Width="600">
+            <StackPanel  Orientation="Vertical" Margin="5,0,0,30">
+                <Label Content="Liste des Patients"/>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                </StackPanel>
+                <DataGrid x:Name="ListeDesPatientsInfiirmiere" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsReadOnly="True">
+
+                </DataGrid>
+            </StackPanel>
+        </Border>
+
+        <Border x:Name="PreposerAdmissionPatient" Grid.Row="4" Grid.RowSpan="3" Grid.Column="2" Grid.ColumnSpan="10" Visibility="hidden" BorderBrush="DarkOrange" BorderThickness="2" Margin="2" Width="600">
+            <StackPanel Orientation="Vertical" Margin="5">
+                <Label Content="Admission Patient"/>
+                
+            </StackPanel>
+        </Border>
+
+        <Border x:Name="PreposerGestionPatient" Grid.Row="4" Grid.RowSpan="3" Grid.Column="2" Grid.ColumnSpan="10" Visibility="Visible" BorderBrush="DarkOrange" BorderThickness="2" Margin="2" Width="600">
+            <StackPanel Orientation="Vertical" Margin="5">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="# Assurance :" Width="100" />
-                    <TextBox x:Name="tbNumeroAssurance" Width="150"/>
+                    <TextBox x:Name="tbNumeroAssurance" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.HealthNumber, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
                     <Label Content="Cie Assurance: " Width="100"/>
-                    <TextBox x:Name="tbCieAssurance" Width="150"/>
+                    <TextBox x:Name="tbCieAssurance" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.InsuranceCompany, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Nom :" Width="100"/>
-                    <TextBox x:Name="tbNomPatien" Width="150"></TextBox>
+                    <TextBox x:Name="tbNomPatien" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
                     <Label Content="Prénom :" Width="100"/>
-                    <TextBox x:Name="tbPrenomPatient" Width="150"/>
+                    <TextBox x:Name="tbPrenomPatient" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.FirstName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
                 </StackPanel>
                 <Label Content=""/>
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="Addresse :" Width="100"/>
-                    <TextBox x:Name="tbAddressePatient" Width="250" />
+                    <Label Content="Addresse :"  Width="100"/>
+                    <TextBox x:Name="tbAddressePatient" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.Address, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="250" />
                     <Label Content="Médecin" Margin="10,0"/>
-                    <ComboBox Width="150">
+                    <ComboBox Name="DocteurListe" Height="23 " Width="150" HorizontalAlignment="Left" IsEditable="False" 
+                              SelectedValue="{Binding ElementName=ListeDesPatients, Path=Doctor1.Doctor, Mode=OneWay, 
+                                              UpdateSourceTrigger=PropertyChanged}" SelectionChanged="DocteurListe_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding DoctorID}"/>
+                                    <TextBlock Text=" - "/>
+                                    <TextBlock Text="{Binding FirstName, Converter={StaticResource converter}}"/>
+                                    <TextBlock Text=", "/>
+                                    <TextBlock Text="{Binding LastName, Converter={StaticResource converter}}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Ville: " Width="100"/>
-                    <TextBox x:Name="tbVillePatient" Width="250"/>
+                    <TextBox x:Name="tbVillePatient" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.City, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="250"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Province :" Width="100"/>
-                    <TextBox x:Name="tbProvincePatient" Width="125"/>
+                    <TextBox x:Name="tbProvincePatient" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.Province, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="125"/>
                     <Label Content="C.P.: "/>
-                    <TextBox x:Name="tbCPPatient" Width="90"/>
+                    <TextBox x:Name="tbCPPatient" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.PostalCode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="90"/>
                     <Label Content="Contact : "/>
-                    <TextBox x:Name="tbContactPatient" Width="170" />
+                    <TextBox x:Name="tbContactPatient" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.NextOfKin, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="170" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="Téléphone : " Width="100"/>
-                    <TextBox x:Name="tbtelPatient" Width="150"/>
+                    <Label Content="Téléphone : "  Width="100"/>
+                    <TextBox x:Name="tbtelPatient" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.Phone, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
                     <Label Content="Lien : " Margin="100,0,20,0"/>
                     <ComboBox Width="170">
                         <ComboBoxItem Content="Mère"/>
@@ -188,10 +262,52 @@
                         <ComboBoxItem Content="Autre"/>
                     </ComboBox>
                 </StackPanel>
-                <Separator Margin="10,20,0,0"/>
-                <Label Content="Liste des clients: " />
-                <DataGrid x:Name="DatagridPatient">
-                    
+                <Separator Margin="10,20,0,10"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="PreposerInserePatient" Content="Inséré Patient" Margin="10,0" Width="100" Click="PreposerInserePatient_Click" />
+                    <Button x:Name="PreposerModifiePatient" Content="Modifié Patient" Margin="10,0" Width="100" Click="PreposerModifiePatient_Click"/>
+                    <Button x:Name="PreposerSupprimePatient" Content="Suprimé Patient" Margin="10,0" Width="100" Click="PreposerSupprimePatient_Click"/>
+                </StackPanel>
+                <Separator Margin="10,10,0,10"/>
+                <Label Content="Liste des patients : " />
+                <DataGrid x:Name="ListeDesPatients" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsReadOnly="True" SelectionChanged="ListeDesPatients_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Id">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding HealthNumber}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Prénom">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding FirstName}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Nom">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding LastName}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Date de naissance">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DateOfBirth}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Docteur">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Doctor}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
         </Border>

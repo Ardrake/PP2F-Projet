@@ -39,15 +39,15 @@ namespace HLN_645_050537
     partial void InsertExtra(Extra instance);
     partial void UpdateExtra(Extra instance);
     partial void DeleteExtra(Extra instance);
+    partial void InsertDoctor(Doctor instance);
+    partial void UpdateDoctor(Doctor instance);
+    partial void DeleteDoctor(Doctor instance);
     partial void InsertPatient(Patient instance);
     partial void UpdatePatient(Patient instance);
     partial void DeletePatient(Patient instance);
     partial void InsertSpecialty(Specialty instance);
     partial void UpdateSpecialty(Specialty instance);
     partial void DeleteSpecialty(Specialty instance);
-    partial void InsertDoctor(Doctor instance);
-    partial void UpdateDoctor(Doctor instance);
-    partial void DeleteDoctor(Doctor instance);
     #endregion
 		
 		public NHL_DataDataContext() : 
@@ -120,6 +120,14 @@ namespace HLN_645_050537
 			}
 		}
 		
+		public System.Data.Linq.Table<Doctor> Doctors
+		{
+			get
+			{
+				return this.GetTable<Doctor>();
+			}
+		}
+		
 		public System.Data.Linq.Table<Patient> Patients
 		{
 			get
@@ -133,14 +141,6 @@ namespace HLN_645_050537
 			get
 			{
 				return this.GetTable<Specialty>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Doctor> Doctors
-		{
-			get
-			{
-				return this.GetTable<Doctor>();
 			}
 		}
 		
@@ -947,6 +947,209 @@ namespace HLN_645_050537
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Doctors")]
+	public partial class Doctor : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _DoctorID;
+		
+		private string _LastName;
+		
+		private string _FirstName;
+		
+		private System.Nullable<int> _Specialty;
+		
+		private EntitySet<Patient> _Patients;
+		
+		private EntityRef<Specialty> _Specialty1;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnDoctorIDChanging(string value);
+    partial void OnDoctorIDChanged();
+    partial void OnLastNameChanging(string value);
+    partial void OnLastNameChanged();
+    partial void OnFirstNameChanging(string value);
+    partial void OnFirstNameChanged();
+    partial void OnSpecialtyChanging(System.Nullable<int> value);
+    partial void OnSpecialtyChanged();
+    #endregion
+		
+		public Doctor()
+		{
+			this._Patients = new EntitySet<Patient>(new Action<Patient>(this.attach_Patients), new Action<Patient>(this.detach_Patients));
+			this._Specialty1 = default(EntityRef<Specialty>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DoctorID", DbType="NChar(4) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string DoctorID
+		{
+			get
+			{
+				return this._DoctorID;
+			}
+			set
+			{
+				if ((this._DoctorID != value))
+				{
+					this.OnDoctorIDChanging(value);
+					this.SendPropertyChanging();
+					this._DoctorID = value;
+					this.SendPropertyChanged("DoctorID");
+					this.OnDoctorIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastName", DbType="NChar(30)")]
+		public string LastName
+		{
+			get
+			{
+				return this._LastName;
+			}
+			set
+			{
+				if ((this._LastName != value))
+				{
+					this.OnLastNameChanging(value);
+					this.SendPropertyChanging();
+					this._LastName = value;
+					this.SendPropertyChanged("LastName");
+					this.OnLastNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FirstName", DbType="NChar(30)")]
+		public string FirstName
+		{
+			get
+			{
+				return this._FirstName;
+			}
+			set
+			{
+				if ((this._FirstName != value))
+				{
+					this.OnFirstNameChanging(value);
+					this.SendPropertyChanging();
+					this._FirstName = value;
+					this.SendPropertyChanged("FirstName");
+					this.OnFirstNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Specialty", DbType="Int")]
+		public System.Nullable<int> Specialty
+		{
+			get
+			{
+				return this._Specialty;
+			}
+			set
+			{
+				if ((this._Specialty != value))
+				{
+					if (this._Specialty1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnSpecialtyChanging(value);
+					this.SendPropertyChanging();
+					this._Specialty = value;
+					this.SendPropertyChanged("Specialty");
+					this.OnSpecialtyChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Doctor_Patient", Storage="_Patients", ThisKey="DoctorID", OtherKey="Doctor")]
+		public EntitySet<Patient> Patients
+		{
+			get
+			{
+				return this._Patients;
+			}
+			set
+			{
+				this._Patients.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Specialty_Doctor", Storage="_Specialty1", ThisKey="Specialty", OtherKey="SpecialtyID", IsForeignKey=true)]
+		public Specialty Specialty1
+		{
+			get
+			{
+				return this._Specialty1.Entity;
+			}
+			set
+			{
+				Specialty previousValue = this._Specialty1.Entity;
+				if (((previousValue != value) 
+							|| (this._Specialty1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Specialty1.Entity = null;
+						previousValue.Doctors.Remove(this);
+					}
+					this._Specialty1.Entity = value;
+					if ((value != null))
+					{
+						value.Doctors.Add(this);
+						this._Specialty = value.SpecialtyID;
+					}
+					else
+					{
+						this._Specialty = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Specialty1");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Patients(Patient entity)
+		{
+			this.SendPropertyChanging();
+			entity.Doctor1 = this;
+		}
+		
+		private void detach_Patients(Patient entity)
+		{
+			this.SendPropertyChanging();
+			entity.Doctor1 = null;
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Patients")]
 	public partial class Patient : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -971,7 +1174,7 @@ namespace HLN_645_050537
 		
 		private string _Phone;
 		
-		private System.Nullable<char> _InsuranceCompany;
+		private string _InsuranceCompany;
 		
 		private string _InsuranceNumber;
 		
@@ -1007,7 +1210,7 @@ namespace HLN_645_050537
     partial void OnPostalCodeChanged();
     partial void OnPhoneChanging(string value);
     partial void OnPhoneChanged();
-    partial void OnInsuranceCompanyChanging(System.Nullable<char> value);
+    partial void OnInsuranceCompanyChanging(string value);
     partial void OnInsuranceCompanyChanged();
     partial void OnInsuranceNumberChanging(string value);
     partial void OnInsuranceNumberChanged();
@@ -1206,8 +1409,8 @@ namespace HLN_645_050537
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_InsuranceCompany", DbType="NChar(1)")]
-		public System.Nullable<char> InsuranceCompany
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_InsuranceCompany", DbType="NChar(30)")]
+		public string InsuranceCompany
 		{
 			get
 			{
@@ -1501,209 +1704,6 @@ namespace HLN_645_050537
 		{
 			this.SendPropertyChanging();
 			entity.Specialty1 = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Doctors")]
-	public partial class Doctor : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private string _DoctorID;
-		
-		private string _LastName;
-		
-		private string _FirstName;
-		
-		private System.Nullable<int> _Specialty;
-		
-		private EntitySet<Patient> _Patients;
-		
-		private EntityRef<Specialty> _Specialty1;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnDoctorIDChanging(string value);
-    partial void OnDoctorIDChanged();
-    partial void OnLastNameChanging(string value);
-    partial void OnLastNameChanged();
-    partial void OnFirstNameChanging(string value);
-    partial void OnFirstNameChanged();
-    partial void OnSpecialtyChanging(System.Nullable<int> value);
-    partial void OnSpecialtyChanged();
-    #endregion
-		
-		public Doctor()
-		{
-			this._Patients = new EntitySet<Patient>(new Action<Patient>(this.attach_Patients), new Action<Patient>(this.detach_Patients));
-			this._Specialty1 = default(EntityRef<Specialty>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DoctorID", DbType="NChar(4) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
-		public string DoctorID
-		{
-			get
-			{
-				return this._DoctorID;
-			}
-			set
-			{
-				if ((this._DoctorID != value))
-				{
-					this.OnDoctorIDChanging(value);
-					this.SendPropertyChanging();
-					this._DoctorID = value;
-					this.SendPropertyChanged("DoctorID");
-					this.OnDoctorIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastName", DbType="NChar(30)")]
-		public string LastName
-		{
-			get
-			{
-				return this._LastName;
-			}
-			set
-			{
-				if ((this._LastName != value))
-				{
-					this.OnLastNameChanging(value);
-					this.SendPropertyChanging();
-					this._LastName = value;
-					this.SendPropertyChanged("LastName");
-					this.OnLastNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FirstName", DbType="NChar(30)")]
-		public string FirstName
-		{
-			get
-			{
-				return this._FirstName;
-			}
-			set
-			{
-				if ((this._FirstName != value))
-				{
-					this.OnFirstNameChanging(value);
-					this.SendPropertyChanging();
-					this._FirstName = value;
-					this.SendPropertyChanged("FirstName");
-					this.OnFirstNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Specialty", DbType="Int")]
-		public System.Nullable<int> Specialty
-		{
-			get
-			{
-				return this._Specialty;
-			}
-			set
-			{
-				if ((this._Specialty != value))
-				{
-					if (this._Specialty1.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnSpecialtyChanging(value);
-					this.SendPropertyChanging();
-					this._Specialty = value;
-					this.SendPropertyChanged("Specialty");
-					this.OnSpecialtyChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Doctor_Patient", Storage="_Patients", ThisKey="DoctorID", OtherKey="Doctor")]
-		public EntitySet<Patient> Patients
-		{
-			get
-			{
-				return this._Patients;
-			}
-			set
-			{
-				this._Patients.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Specialty_Doctor", Storage="_Specialty1", ThisKey="Specialty", OtherKey="SpecialtyID", IsForeignKey=true)]
-		public Specialty Specialty1
-		{
-			get
-			{
-				return this._Specialty1.Entity;
-			}
-			set
-			{
-				Specialty previousValue = this._Specialty1.Entity;
-				if (((previousValue != value) 
-							|| (this._Specialty1.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Specialty1.Entity = null;
-						previousValue.Doctors.Remove(this);
-					}
-					this._Specialty1.Entity = value;
-					if ((value != null))
-					{
-						value.Doctors.Add(this);
-						this._Specialty = value.SpecialtyID;
-					}
-					else
-					{
-						this._Specialty = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("Specialty1");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Patients(Patient entity)
-		{
-			this.SendPropertyChanging();
-			entity.Doctor1 = this;
-		}
-		
-		private void detach_Patients(Patient entity)
-		{
-			this.SendPropertyChanging();
-			entity.Doctor1 = null;
 		}
 	}
 }
