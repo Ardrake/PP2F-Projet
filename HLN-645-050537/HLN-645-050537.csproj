@@ -56,6 +56,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Facture.xaml.cs">
+      <DependentUpon>Facture.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="_NLH_645_050537DataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>_NLH_645_050537DataSet.xsd</DependentUpon>
+    </Compile>
+    <Page Include="Facture.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -112,6 +124,17 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="_NLH_645_050537DataSet.xsc">
+      <DependentUpon>_NLH_645_050537DataSet.xsd</DependentUpon>
+    </None>
+    <None Include="_NLH_645_050537DataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>_NLH_645_050537DataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="_NLH_645_050537DataSet.xss">
+      <DependentUpon>_NLH_645_050537DataSet.xsd</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

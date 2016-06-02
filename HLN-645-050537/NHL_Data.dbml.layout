@@ -2,25 +2,12 @@
 <ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.875" name="NHL_Data">
   <DataContextMoniker Name="/NHL_DataDataContext" />
   <nestedChildShapes>
-    <classShape Id="00986e22-b520-4e22-9329-9654d49e3cff" absoluteBounds="3, 1.625, 2, 2.1554996744791666">
-      <DataClassMoniker Name="/NHL_DataDataContext/AdmissionRecord" />
-      <nestedChildShapes>
-        <elementListCompartment Id="61e73cc7-128b-4be0-b16f-35c4bd4e836f" absoluteBounds="3.015, 2.085, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="b3330fd9-4e48-4dc7-bb38-528b8df71934" absoluteBounds="5.625, 0.5, 2, 1.5785953776041666">
       <DataClassMoniker Name="/NHL_DataDataContext/Bed" />
       <nestedChildShapes>
         <elementListCompartment Id="77ef517a-200f-4fc5-8acc-c8628c102d78" absoluteBounds="5.64, 0.96, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5.625 : 1.85179768880208); (5 : 1.85179768880208)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/NHL_DataDataContext/Bed/Bed_AdmissionRecord" />
-      <nodes>
-        <classShapeMoniker Id="b3330fd9-4e48-4dc7-bb38-528b8df71934" />
-        <classShapeMoniker Id="00986e22-b520-4e22-9329-9654d49e3cff" />
-      </nodes>
-    </associationConnector>
     <classShape Id="1b4dc68a-f2a8-4013-ae63-a9a19eeb501d" absoluteBounds="3.375, 7.375, 2, 1.1939925130208333">
       <DataClassMoniker Name="/NHL_DataDataContext/Extra_Rate" />
       <nestedChildShapes>
@@ -33,13 +20,6 @@
         <elementListCompartment Id="2ebfd11e-e9c6-4fa4-92e4-a9e882f29a43" absoluteBounds="5.7650000000000006, 2.835, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5 : 3.07774983723958); (5.75 : 3.07774983723958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/NHL_DataDataContext/AdmissionRecord/AdmissionRecord_Extra" />
-      <nodes>
-        <classShapeMoniker Id="00986e22-b520-4e22-9329-9654d49e3cff" />
-        <classShapeMoniker Id="bd16e0aa-2374-46e5-9fb7-ec38844e5c2b" />
-      </nodes>
-    </associationConnector>
     <classShape Id="73fa4411-a46e-48b0-a3eb-8c65261c4496" absoluteBounds="0.625, 7.375, 2, 1.1939925130208333">
       <DataClassMoniker Name="/NHL_DataDataContext/Login" />
       <nestedChildShapes>
@@ -58,13 +38,6 @@
         <elementListCompartment Id="bfa2b4af-6873-44e8-9dcb-eb4bb95853ae" absoluteBounds="0.51500000000000012, 1.21, 1.9700000000000002, 2.941609700520833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(2.5 : 2.70274983723958); (3 : 2.70274983723958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/NHL_DataDataContext/Patient/Patient_AdmissionRecord" />
-      <nodes>
-        <classShapeMoniker Id="e2f94768-71c7-4f19-a001-221d4929ed0a" />
-        <classShapeMoniker Id="00986e22-b520-4e22-9329-9654d49e3cff" />
-      </nodes>
-    </associationConnector>
     <associationConnector edgePoints="[(1.625 : 5.125); (1.625 : 4.25160970052083)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NHL_DataDataContext/Doctor/Doctor_Patient" />
       <nodes>
@@ -85,11 +58,44 @@
         <classShapeMoniker Id="d41acc71-6a62-4588-b95e-6e7b3d72819d" />
       </nodes>
     </associationConnector>
-    <classShape Id="254cb138-6f9f-412a-a11c-4ef6c22e547a" absoluteBounds="6.875, 5.5, 2, 1.0016910807291668">
+    <classShape Id="254cb138-6f9f-412a-a11c-4ef6c22e547a" absoluteBounds="6.375, 4.875, 2, 1.0016910807291668">
       <DataClassMoniker Name="/NHL_DataDataContext/Ward" />
       <nestedChildShapes>
-        <elementListCompartment Id="3e99a704-9f9d-46f1-96b2-8b315281b916" absoluteBounds="6.89, 5.96, 1.9700000000000002, 0.44169108072916669" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="3e99a704-9f9d-46f1-96b2-8b315281b916" absoluteBounds="6.39, 5.335, 1.9700000000000002, 0.44169108072916669" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
+    <classShape Id="a47dff24-6fc7-43b2-9b70-2756ba7335b2" absoluteBounds="6.375, 6.25, 2, 2.1554996744791666">
+      <DataClassMoniker Name="/NHL_DataDataContext/ViewListeDesPatient" />
+      <nestedChildShapes>
+        <elementListCompartment Id="72ea0f5f-6498-40e9-8722-9c91984fb256" absoluteBounds="6.39, 6.71, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="a50a19b0-ee2a-4fab-905f-c54fa2f43779" absoluteBounds="3, 1.75, 2, 2.3478011067708335">
+      <DataClassMoniker Name="/NHL_DataDataContext/AdmissionRecord" />
+      <nestedChildShapes>
+        <elementListCompartment Id="cfd1e0dc-ea83-49f9-a4a7-a561dfa37b04" absoluteBounds="3.0149999999999997, 2.21, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5 : 3.23640055338542); (5.75 : 3.23640055338542)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/NHL_DataDataContext/AdmissionRecord/AdmissionRecord_Extra" />
+      <nodes>
+        <classShapeMoniker Id="a50a19b0-ee2a-4fab-905f-c54fa2f43779" />
+        <classShapeMoniker Id="bd16e0aa-2374-46e5-9fb7-ec38844e5c2b" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.625 : 1.1249995); (4 : 1.1249995); (4 : 1.75)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/NHL_DataDataContext/Bed/Bed_AdmissionRecord" />
+      <nodes>
+        <classShapeMoniker Id="b3330fd9-4e48-4dc7-bb38-528b8df71934" />
+        <classShapeMoniker Id="a50a19b0-ee2a-4fab-905f-c54fa2f43779" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.5 : 2.92390055338542); (3 : 2.92390055338542)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/NHL_DataDataContext/Patient/Patient_AdmissionRecord" />
+      <nodes>
+        <classShapeMoniker Id="e2f94768-71c7-4f19-a001-221d4929ed0a" />
+        <classShapeMoniker Id="a50a19b0-ee2a-4fab-905f-c54fa2f43779" />
+      </nodes>
+    </associationConnector>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

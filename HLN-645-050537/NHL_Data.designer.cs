@@ -30,9 +30,6 @@ namespace HLN_645_050537
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertAdmissionRecord(AdmissionRecord instance);
-    partial void UpdateAdmissionRecord(AdmissionRecord instance);
-    partial void DeleteAdmissionRecord(AdmissionRecord instance);
     partial void InsertBed(Bed instance);
     partial void UpdateBed(Bed instance);
     partial void DeleteBed(Bed instance);
@@ -51,10 +48,13 @@ namespace HLN_645_050537
     partial void InsertWard(Ward instance);
     partial void UpdateWard(Ward instance);
     partial void DeleteWard(Ward instance);
+    partial void InsertAdmissionRecord(AdmissionRecord instance);
+    partial void UpdateAdmissionRecord(AdmissionRecord instance);
+    partial void DeleteAdmissionRecord(AdmissionRecord instance);
     #endregion
 		
 		public NHL_DataDataContext() : 
-				base(global::HLN_645_050537.Properties.Settings.Default.NLH_645_050537ConnectionString1, mappingSource)
+				base(global::HLN_645_050537.Properties.Settings.Default.NLH_645_050537ConnectionString2, mappingSource)
 		{
 			OnCreated();
 		}
@@ -81,14 +81,6 @@ namespace HLN_645_050537
 				base(connection, mappingSource)
 		{
 			OnCreated();
-		}
-		
-		public System.Data.Linq.Table<AdmissionRecord> AdmissionRecords
-		{
-			get
-			{
-				return this.GetTable<AdmissionRecord>();
-			}
 		}
 		
 		public System.Data.Linq.Table<Bed> Beds
@@ -155,6 +147,22 @@ namespace HLN_645_050537
 			}
 		}
 		
+		public System.Data.Linq.Table<ViewListeDesPatient> ViewListeDesPatients
+		{
+			get
+			{
+				return this.GetTable<ViewListeDesPatient>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AdmissionRecord> AdmissionRecords
+		{
+			get
+			{
+				return this.GetTable<AdmissionRecord>();
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.InsereDocteur")]
 		public int InsereDocteur([global::System.Data.Linq.Mapping.ParameterAttribute(Name="Id", DbType="NChar(4)")] string id, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LastName", DbType="NChar(30)")] string lastName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FirstName", DbType="NChar(30)")] string firstName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Specialty", DbType="Int")] System.Nullable<int> specialty)
 		{
@@ -174,325 +182,12 @@ namespace HLN_645_050537
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), admissionId, patientID, bedNumber, admitDate);
 			return ((int)(result.ReturnValue));
 		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AdmissionRecords")]
-	public partial class AdmissionRecord : INotifyPropertyChanging, INotifyPropertyChanged
-	{
 		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private string _AdmissionID;
-		
-		private string _PatientID;
-		
-		private string _BedNumber;
-		
-		private System.Nullable<bool> _SurgeryScheduled;
-		
-		private System.Nullable<System.DateTime> _AdmitDate;
-		
-		private System.Nullable<System.DateTime> _SurgeryDate;
-		
-		private System.Nullable<System.DateTime> _DischargeDate;
-		
-		private EntityRef<Extra> _Extra;
-		
-		private EntityRef<Bed> _Bed;
-		
-		private EntityRef<Patient> _Patient;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnAdmissionIDChanging(string value);
-    partial void OnAdmissionIDChanged();
-    partial void OnPatientIDChanging(string value);
-    partial void OnPatientIDChanged();
-    partial void OnBedNumberChanging(string value);
-    partial void OnBedNumberChanged();
-    partial void OnSurgeryScheduledChanging(System.Nullable<bool> value);
-    partial void OnSurgeryScheduledChanged();
-    partial void OnAdmitDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnAdmitDateChanged();
-    partial void OnSurgeryDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnSurgeryDateChanged();
-    partial void OnDischargeDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnDischargeDateChanged();
-    #endregion
-		
-		public AdmissionRecord()
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.CongePatient")]
+		public int CongePatient([global::System.Data.Linq.Mapping.ParameterAttribute(Name="AdmissionId", DbType="NChar(30)")] string admissionId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="BedNumber", DbType="NChar(3)")] string bedNumber)
 		{
-			this._Extra = default(EntityRef<Extra>);
-			this._Bed = default(EntityRef<Bed>);
-			this._Patient = default(EntityRef<Patient>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AdmissionID", DbType="NChar(30) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
-		public string AdmissionID
-		{
-			get
-			{
-				return this._AdmissionID;
-			}
-			set
-			{
-				if ((this._AdmissionID != value))
-				{
-					this.OnAdmissionIDChanging(value);
-					this.SendPropertyChanging();
-					this._AdmissionID = value;
-					this.SendPropertyChanged("AdmissionID");
-					this.OnAdmissionIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PatientID", DbType="NChar(15) NOT NULL", CanBeNull=false)]
-		public string PatientID
-		{
-			get
-			{
-				return this._PatientID;
-			}
-			set
-			{
-				if ((this._PatientID != value))
-				{
-					if (this._Patient.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnPatientIDChanging(value);
-					this.SendPropertyChanging();
-					this._PatientID = value;
-					this.SendPropertyChanged("PatientID");
-					this.OnPatientIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BedNumber", DbType="NChar(3)")]
-		public string BedNumber
-		{
-			get
-			{
-				return this._BedNumber;
-			}
-			set
-			{
-				if ((this._BedNumber != value))
-				{
-					if (this._Bed.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnBedNumberChanging(value);
-					this.SendPropertyChanging();
-					this._BedNumber = value;
-					this.SendPropertyChanged("BedNumber");
-					this.OnBedNumberChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SurgeryScheduled", DbType="Bit")]
-		public System.Nullable<bool> SurgeryScheduled
-		{
-			get
-			{
-				return this._SurgeryScheduled;
-			}
-			set
-			{
-				if ((this._SurgeryScheduled != value))
-				{
-					this.OnSurgeryScheduledChanging(value);
-					this.SendPropertyChanging();
-					this._SurgeryScheduled = value;
-					this.SendPropertyChanged("SurgeryScheduled");
-					this.OnSurgeryScheduledChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AdmitDate", DbType="DateTime")]
-		public System.Nullable<System.DateTime> AdmitDate
-		{
-			get
-			{
-				return this._AdmitDate;
-			}
-			set
-			{
-				if ((this._AdmitDate != value))
-				{
-					this.OnAdmitDateChanging(value);
-					this.SendPropertyChanging();
-					this._AdmitDate = value;
-					this.SendPropertyChanged("AdmitDate");
-					this.OnAdmitDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SurgeryDate", DbType="DateTime")]
-		public System.Nullable<System.DateTime> SurgeryDate
-		{
-			get
-			{
-				return this._SurgeryDate;
-			}
-			set
-			{
-				if ((this._SurgeryDate != value))
-				{
-					this.OnSurgeryDateChanging(value);
-					this.SendPropertyChanging();
-					this._SurgeryDate = value;
-					this.SendPropertyChanged("SurgeryDate");
-					this.OnSurgeryDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DischargeDate", DbType="DateTime")]
-		public System.Nullable<System.DateTime> DischargeDate
-		{
-			get
-			{
-				return this._DischargeDate;
-			}
-			set
-			{
-				if ((this._DischargeDate != value))
-				{
-					this.OnDischargeDateChanging(value);
-					this.SendPropertyChanging();
-					this._DischargeDate = value;
-					this.SendPropertyChanged("DischargeDate");
-					this.OnDischargeDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AdmissionRecord_Extra", Storage="_Extra", ThisKey="AdmissionID", OtherKey="AdmissionRecordID", IsUnique=true, IsForeignKey=false)]
-		public Extra Extra
-		{
-			get
-			{
-				return this._Extra.Entity;
-			}
-			set
-			{
-				Extra previousValue = this._Extra.Entity;
-				if (((previousValue != value) 
-							|| (this._Extra.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Extra.Entity = null;
-						previousValue.AdmissionRecord = null;
-					}
-					this._Extra.Entity = value;
-					if ((value != null))
-					{
-						value.AdmissionRecord = this;
-					}
-					this.SendPropertyChanged("Extra");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Bed_AdmissionRecord", Storage="_Bed", ThisKey="BedNumber", OtherKey="BedNumber", IsForeignKey=true)]
-		public Bed Bed
-		{
-			get
-			{
-				return this._Bed.Entity;
-			}
-			set
-			{
-				Bed previousValue = this._Bed.Entity;
-				if (((previousValue != value) 
-							|| (this._Bed.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Bed.Entity = null;
-						previousValue.AdmissionRecords.Remove(this);
-					}
-					this._Bed.Entity = value;
-					if ((value != null))
-					{
-						value.AdmissionRecords.Add(this);
-						this._BedNumber = value.BedNumber;
-					}
-					else
-					{
-						this._BedNumber = default(string);
-					}
-					this.SendPropertyChanged("Bed");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Patient_AdmissionRecord", Storage="_Patient", ThisKey="PatientID", OtherKey="HealthNumber", IsForeignKey=true)]
-		public Patient Patient
-		{
-			get
-			{
-				return this._Patient.Entity;
-			}
-			set
-			{
-				Patient previousValue = this._Patient.Entity;
-				if (((previousValue != value) 
-							|| (this._Patient.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Patient.Entity = null;
-						previousValue.AdmissionRecords.Remove(this);
-					}
-					this._Patient.Entity = value;
-					if ((value != null))
-					{
-						value.AdmissionRecords.Add(this);
-						this._PatientID = value.HealthNumber;
-					}
-					else
-					{
-						this._PatientID = default(string);
-					}
-					this.SendPropertyChanged("Patient");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), admissionId, bedNumber);
+			return ((int)(result.ReturnValue));
 		}
 	}
 	
@@ -1768,6 +1463,485 @@ namespace HLN_645_050537
 					this._WARD1 = value;
 					this.SendPropertyChanged("WARD1");
 					this.OnWARD1Changed();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ViewListeDesPatient")]
+	public partial class ViewListeDesPatient
+	{
+		
+		private string _HealthNumber;
+		
+		private string _FirstName;
+		
+		private string _LastName;
+		
+		private System.Nullable<System.DateTime> _DateOfBirth;
+		
+		private string _DocLastName;
+		
+		private string _WardName;
+		
+		private string _BedNumber;
+		
+		public ViewListeDesPatient()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HealthNumber", DbType="NChar(15) NOT NULL", CanBeNull=false)]
+		public string HealthNumber
+		{
+			get
+			{
+				return this._HealthNumber;
+			}
+			set
+			{
+				if ((this._HealthNumber != value))
+				{
+					this._HealthNumber = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FirstName", DbType="NChar(30)")]
+		public string FirstName
+		{
+			get
+			{
+				return this._FirstName;
+			}
+			set
+			{
+				if ((this._FirstName != value))
+				{
+					this._FirstName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastName", DbType="NChar(30)")]
+		public string LastName
+		{
+			get
+			{
+				return this._LastName;
+			}
+			set
+			{
+				if ((this._LastName != value))
+				{
+					this._LastName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateOfBirth", DbType="DateTime")]
+		public System.Nullable<System.DateTime> DateOfBirth
+		{
+			get
+			{
+				return this._DateOfBirth;
+			}
+			set
+			{
+				if ((this._DateOfBirth != value))
+				{
+					this._DateOfBirth = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocLastName", DbType="NChar(30)")]
+		public string DocLastName
+		{
+			get
+			{
+				return this._DocLastName;
+			}
+			set
+			{
+				if ((this._DocLastName != value))
+				{
+					this._DocLastName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WardName", DbType="NChar(15)")]
+		public string WardName
+		{
+			get
+			{
+				return this._WardName;
+			}
+			set
+			{
+				if ((this._WardName != value))
+				{
+					this._WardName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BedNumber", DbType="NChar(3)")]
+		public string BedNumber
+		{
+			get
+			{
+				return this._BedNumber;
+			}
+			set
+			{
+				if ((this._BedNumber != value))
+				{
+					this._BedNumber = value;
+				}
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AdmissionRecords")]
+	public partial class AdmissionRecord : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _AdmissionID;
+		
+		private string _PatientID;
+		
+		private string _BedNumber;
+		
+		private System.Nullable<bool> _SurgeryScheduled;
+		
+		private System.Nullable<System.DateTime> _AdmitDate;
+		
+		private System.Nullable<System.DateTime> _SurgeryDate;
+		
+		private System.Nullable<System.DateTime> _DischargeDate;
+		
+		private bool _Facture;
+		
+		private EntityRef<Extra> _Extra;
+		
+		private EntityRef<Bed> _Bed;
+		
+		private EntityRef<Patient> _Patient;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnAdmissionIDChanging(string value);
+    partial void OnAdmissionIDChanged();
+    partial void OnPatientIDChanging(string value);
+    partial void OnPatientIDChanged();
+    partial void OnBedNumberChanging(string value);
+    partial void OnBedNumberChanged();
+    partial void OnSurgeryScheduledChanging(System.Nullable<bool> value);
+    partial void OnSurgeryScheduledChanged();
+    partial void OnAdmitDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnAdmitDateChanged();
+    partial void OnSurgeryDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnSurgeryDateChanged();
+    partial void OnDischargeDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnDischargeDateChanged();
+    partial void OnFactureChanging(bool value);
+    partial void OnFactureChanged();
+    #endregion
+		
+		public AdmissionRecord()
+		{
+			this._Extra = default(EntityRef<Extra>);
+			this._Bed = default(EntityRef<Bed>);
+			this._Patient = default(EntityRef<Patient>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AdmissionID", DbType="NChar(30) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string AdmissionID
+		{
+			get
+			{
+				return this._AdmissionID;
+			}
+			set
+			{
+				if ((this._AdmissionID != value))
+				{
+					this.OnAdmissionIDChanging(value);
+					this.SendPropertyChanging();
+					this._AdmissionID = value;
+					this.SendPropertyChanged("AdmissionID");
+					this.OnAdmissionIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PatientID", DbType="NChar(15) NOT NULL", CanBeNull=false)]
+		public string PatientID
+		{
+			get
+			{
+				return this._PatientID;
+			}
+			set
+			{
+				if ((this._PatientID != value))
+				{
+					if (this._Patient.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnPatientIDChanging(value);
+					this.SendPropertyChanging();
+					this._PatientID = value;
+					this.SendPropertyChanged("PatientID");
+					this.OnPatientIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BedNumber", DbType="NChar(3)")]
+		public string BedNumber
+		{
+			get
+			{
+				return this._BedNumber;
+			}
+			set
+			{
+				if ((this._BedNumber != value))
+				{
+					if (this._Bed.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnBedNumberChanging(value);
+					this.SendPropertyChanging();
+					this._BedNumber = value;
+					this.SendPropertyChanged("BedNumber");
+					this.OnBedNumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SurgeryScheduled", DbType="Bit")]
+		public System.Nullable<bool> SurgeryScheduled
+		{
+			get
+			{
+				return this._SurgeryScheduled;
+			}
+			set
+			{
+				if ((this._SurgeryScheduled != value))
+				{
+					this.OnSurgeryScheduledChanging(value);
+					this.SendPropertyChanging();
+					this._SurgeryScheduled = value;
+					this.SendPropertyChanged("SurgeryScheduled");
+					this.OnSurgeryScheduledChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AdmitDate", DbType="DateTime")]
+		public System.Nullable<System.DateTime> AdmitDate
+		{
+			get
+			{
+				return this._AdmitDate;
+			}
+			set
+			{
+				if ((this._AdmitDate != value))
+				{
+					this.OnAdmitDateChanging(value);
+					this.SendPropertyChanging();
+					this._AdmitDate = value;
+					this.SendPropertyChanged("AdmitDate");
+					this.OnAdmitDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SurgeryDate", DbType="DateTime")]
+		public System.Nullable<System.DateTime> SurgeryDate
+		{
+			get
+			{
+				return this._SurgeryDate;
+			}
+			set
+			{
+				if ((this._SurgeryDate != value))
+				{
+					this.OnSurgeryDateChanging(value);
+					this.SendPropertyChanging();
+					this._SurgeryDate = value;
+					this.SendPropertyChanged("SurgeryDate");
+					this.OnSurgeryDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DischargeDate", DbType="DateTime")]
+		public System.Nullable<System.DateTime> DischargeDate
+		{
+			get
+			{
+				return this._DischargeDate;
+			}
+			set
+			{
+				if ((this._DischargeDate != value))
+				{
+					this.OnDischargeDateChanging(value);
+					this.SendPropertyChanging();
+					this._DischargeDate = value;
+					this.SendPropertyChanged("DischargeDate");
+					this.OnDischargeDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Facture", DbType="Bit NOT NULL")]
+		public bool Facture
+		{
+			get
+			{
+				return this._Facture;
+			}
+			set
+			{
+				if ((this._Facture != value))
+				{
+					this.OnFactureChanging(value);
+					this.SendPropertyChanging();
+					this._Facture = value;
+					this.SendPropertyChanged("Facture");
+					this.OnFactureChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AdmissionRecord_Extra", Storage="_Extra", ThisKey="AdmissionID", OtherKey="AdmissionRecordID", IsUnique=true, IsForeignKey=false)]
+		public Extra Extra
+		{
+			get
+			{
+				return this._Extra.Entity;
+			}
+			set
+			{
+				Extra previousValue = this._Extra.Entity;
+				if (((previousValue != value) 
+							|| (this._Extra.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Extra.Entity = null;
+						previousValue.AdmissionRecord = null;
+					}
+					this._Extra.Entity = value;
+					if ((value != null))
+					{
+						value.AdmissionRecord = this;
+					}
+					this.SendPropertyChanged("Extra");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Bed_AdmissionRecord", Storage="_Bed", ThisKey="BedNumber", OtherKey="BedNumber", IsForeignKey=true)]
+		public Bed Bed
+		{
+			get
+			{
+				return this._Bed.Entity;
+			}
+			set
+			{
+				Bed previousValue = this._Bed.Entity;
+				if (((previousValue != value) 
+							|| (this._Bed.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Bed.Entity = null;
+						previousValue.AdmissionRecords.Remove(this);
+					}
+					this._Bed.Entity = value;
+					if ((value != null))
+					{
+						value.AdmissionRecords.Add(this);
+						this._BedNumber = value.BedNumber;
+					}
+					else
+					{
+						this._BedNumber = default(string);
+					}
+					this.SendPropertyChanged("Bed");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Patient_AdmissionRecord", Storage="_Patient", ThisKey="PatientID", OtherKey="HealthNumber", IsForeignKey=true)]
+		public Patient Patient
+		{
+			get
+			{
+				return this._Patient.Entity;
+			}
+			set
+			{
+				Patient previousValue = this._Patient.Entity;
+				if (((previousValue != value) 
+							|| (this._Patient.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Patient.Entity = null;
+						previousValue.AdmissionRecords.Remove(this);
+					}
+					this._Patient.Entity = value;
+					if ((value != null))
+					{
+						value.AdmissionRecords.Add(this);
+						this._PatientID = value.HealthNumber;
+					}
+					else
+					{
+						this._PatientID = default(string);
+					}
+					this.SendPropertyChanged("Patient");
 				}
 			}
 		}

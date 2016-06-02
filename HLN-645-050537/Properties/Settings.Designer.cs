@@ -43,5 +43,16 @@ namespace HLN_645_050537.Properties {
                 return ((string)(this["NLH_645_050537ConnectionString1"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=CABANONS00171;Initial Catalog=NLH-645-050537;Integrated Security=True" +
+            "")]
+        public string NLH_645_050537ConnectionString2 {
+            get {
+                return ((string)(this["NLH_645_050537ConnectionString2"]));
+            }
+        }
     }
 }

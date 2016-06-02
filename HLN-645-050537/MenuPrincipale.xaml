@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HLN_645_050537"
         mc:Ignorable="d"
-        Title="MenuPrincipale" Height="1800" Width="1000">
+        Title="MenuPrincipale" Height="800" Width="860">
     <Window.Resources>
         <local:StringTrimmingConverter x:Key="converter"/>
     </Window.Resources>
@@ -110,7 +110,6 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
                         <DataGridTemplateColumn Header="Nom">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -138,11 +137,100 @@
         </Border>
         <Border x:Name="ZoneAdminGereFacture" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3" Visibility="Hidden" BorderBrush="Red" BorderThickness="2" Margin="2" Width="600">
             <StackPanel Orientation="Vertical" Margin="5">
-                <TextBlock Text="Menu Gestion des medecin" />
+                <Label Content="Liste des factures à traité"/>
                 <Separator Margin="0,0,0,10"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <Label Content="Liste des factures" Width="100"/>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                    <DataGrid x:Name="ListAFacture" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Id">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding AdmissionID}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Nom">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Patient.LastName}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Prénom">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Patient.FirstName}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Aile">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Bed.WardName}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Chambre">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding BedNumber}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Genere facture" Width="200" Click="Button_Click_1"/>
+                    </StackPanel>
+                    
+                    <Label Content="Liste des factures complété" />
+                    <Separator Margin="0,0,0,10"/>
+                    <DataGrid x:Name="ListAFactureTermine" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Id">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding AdmissionID}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Nom">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Patient.LastName}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Prénom">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Patient.FirstName}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Aile">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Bed.WardName}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Chambre">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding BedNumber}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Re-Impression Facture" Width="200" Click="Button_Click_2"/>
+                    </StackPanel>
+
                 </StackPanel>
+                
             </StackPanel>
         </Border>
 
@@ -152,7 +240,7 @@
                 <Label Content="Congé Patient"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                 <Label Content="Liste des patient hospitaliser"/>
-                <Button Content="Authoriser congé" Margin="120,0" Width="150"/>
+                <Button Content="Authoriser congé" Margin="120,0" Width="150" Click="Button_Click"/>
             </StackPanel>
                 <Separator Margin="10,20,10,10"/>
                 <DataGrid x:Name="ListePatientHositaliser" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsReadOnly="True">
@@ -160,25 +248,39 @@
                             <DataGridTemplateColumn Header="Id">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding DoctorID}"/>
+                                        <TextBlock Text="{Binding AdmissionID}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTemplateColumn Header="Nom">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding LastName}"/>
+                                    <TextBlock Text="{Binding Patient.LastName}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTemplateColumn Header="Prénom">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding FirstName}"/>
+                                    <TextBlock Text="{Binding Patient.FirstName}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                        </DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Aile">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Bed.WardName}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Chambre">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding BedNumber}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
                     </DataGrid>
             </StackPanel>
         </Border>
@@ -187,11 +289,22 @@
             <StackPanel  Orientation="Vertical" Margin="5,0,0,30">
                 <Label Content="Liste des Patients"/>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-
                 </StackPanel>
-                <DataGrid x:Name="ListeDesPatientsInfiirmiere" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsReadOnly="True">
-
-                </DataGrid>
+                
+                <!-- Utilisation du ListView obligatoire-->
+                <ListView x:Name="LVListeDesPatient" ItemsSource="{Binding NotifyOnSourceUpdated=True}" BorderThickness="1" BorderBrush="Black">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding HealthNumber}" Header="Id" Width="50"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding FirstName}" Header="Prénom" Width="100"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding LastName}" Header="Nom" Width="100"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding DateOfBirth, StringFormat=\{0:d\}}" Header="Date de Nais." Width="90"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding DocLastName}" Header="Docteur" Width="70" />
+                            <GridViewColumn DisplayMemberBinding="{Binding WardName}" Header="Aile" Width="90" />
+                            <GridViewColumn DisplayMemberBinding="{Binding BedNumber}" Header="# chambre" Width="80"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </StackPanel>
         </Border>
 
@@ -201,7 +314,7 @@
                 <Separator Margin="10,0,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Choisir le patient" Width="150"/>
-                    <ComboBox x:Name="SelectionPatientAdmission" Width="300">
+                    <ComboBox x:Name="SelectionPatientAdmission" Width="300" DropDownClosed="SelectionPatientAdmission_DropDownClosed">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -240,8 +353,15 @@
                     </ComboBox>
                 </StackPanel>
                 <Separator Margin="10,10"/>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Option / Extra de chambre : "/>
+                    <CheckBox x:Name="checkTelevision" Content="Télévision" Margin="20,5"/>
+                    <CheckBox x:Name="checkTelephone" Content="Téléphone" Margin="20,5"/>
+                    <TextBlock Text="Type de chambre :" Margin="1,5"/>
+                    <TextBox Text="Standard" Margin="5,3" IsEnabled="False" Width="100"/>
+                </StackPanel>
+                <Separator Margin="10,10"/>
                 <Button x:Name="AdmissionAcceter" Content="Accepter" HorizontalAlignment="Right" Width="120" Click="AdmissionAcceter_Click"/>
-
             </StackPanel>
         </Border>
 
@@ -307,6 +427,8 @@
                         <ComboBoxItem Content="Père"/>
                         <ComboBoxItem Content="Frère"/>
                         <ComboBoxItem Content="Soeur"/>
+                        <ComboBoxItem Content="Fils"/>
+                        <ComboBoxItem Content="Fille"/>
                         <ComboBoxItem Content="Grand Mre"/>
                         <ComboBoxItem Content="Grand Père"/>
                         <ComboBoxItem Content="Oncle"/>
@@ -319,7 +441,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button x:Name="PreposerInserePatient" Content="Inséré Patient" Margin="10,0" Width="100" Click="PreposerInserePatient_Click" />
                     <Button x:Name="PreposerModifiePatient" Content="Modifié Patient" Margin="10,0" Width="100" Click="PreposerModifiePatient_Click"/>
-                    <Button x:Name="PreposerSupprimePatient" Content="Suprimé Patient" Margin="10,0" Width="100" Click="PreposerSupprimePatient_Click"/>
+                    <!--<Button x:Name="PreposerSupprimePatient" Content="Suprimé Patient" Margin="10,0" Width="100" Click="PreposerSupprimePatient_Click"/>-->
                 </StackPanel>
                 <Separator Margin="10,10,0,10"/>
                 <Label Content="Liste des patients : " />

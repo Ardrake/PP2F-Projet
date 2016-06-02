@@ -22,8 +22,8 @@ namespace HLN_645_050537
     {
         public string SelectedSpecialty { get; set; }
 
-        //NHL_DataDataContext context = new NHL_DataDataContext("Data Source = CABANONS00006V; Initial Catalog = NLH-645-050537; Integrated Security = True");
-        NHL_DataDataContext context = new NHL_DataDataContext("Data Source = ANDRE-PC; Initial Catalog = NLH-645-050537; Integrated Security = True");
+        NHL_DataDataContext context = new NHL_DataDataContext("Data Source = CABANONS00171; Initial Catalog = NLH-645-050537; Integrated Security = True");
+        //NHL_DataDataContext context = new NHL_DataDataContext("Data Source = ANDRE-PC; Initial Catalog = NLH-645-050537; Integrated Security = True");
 
         public MenuPrincipale()
         {
@@ -90,6 +90,45 @@ namespace HLN_645_050537
         {
             ZoneAdminGereDocteur.Visibility = Visibility.Collapsed;
             ZoneAdminGereFacture.Visibility = Visibility.Visible;
+
+            var query = from a in context.AdmissionRecords
+                        where a.Facture == false
+                        select a;
+
+            ObservableCollection<AdmissionRecord> myFactureList = new ObservableCollection<AdmissionRecord>();
+
+            var getlist = query;
+            foreach (var item in getlist)
+            {
+                myFactureList.Add(item);
+            }
+
+            var queryTemine = from a in context.AdmissionRecords
+                              where a.Facture == true
+                              select a;
+
+            ObservableCollection<AdmissionRecord> myFactureListTermnine = new ObservableCollection<AdmissionRecord>();
+
+            var getlisttermine = queryTemine;
+            foreach (var item in getlisttermine)
+            {
+                myFactureListTermnine.Add(item);
+            }
+
+            ListAFacture.DataContext = myFactureList;
+            ListAFactureTermine.DataContext = myFactureListTermnine;
+        }
+
+        // Bouton genere Facture
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        // Bouton re-impression facture
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void PreposerPatient_Click(object sender, RoutedEventArgs e)
@@ -113,6 +152,49 @@ namespace HLN_645_050537
             SelectionPatientAdmission.ItemsSource = selecPatientAdmission;
         }
 
+        // Section Liste des patients (Menu Infirmiere)
+        private void InfirmiereListePatient_Click(object sender, RoutedEventArgs e)
+        {
+            InfirmiereListeDesPatients.Visibility = Visibility.Visible;
+            LVListeDesPatient.DataContext = GetPatientAdmis();
+        }
+
+        private void SelectionPatientAdmission_DropDownClosed(object sender, EventArgs e)
+        {
+            int Age = 0;
+            try
+            {
+                DateTime myDob = new DateTime();
+                myDob = (DateTime)((GetPatientAdmissionResult)SelectionPatientAdmission.SelectedItem).DateOfBirth;
+                Age = DateTime.MinValue.AddDays(DateTime.Now.Subtract(myDob).TotalHours / 24).Year - 1;
+            }
+            catch
+            {
+                Age = 0;
+            }
+
+            if (Age < 18)
+            {
+                SelectionPatientAile.SelectedIndex = 2;
+
+
+                Ward myWard = null;
+
+                myWard = (Ward)SelectionPatientAile.SelectedValue;
+
+                var selectionChambre = from b in context.Beds
+                                       where b.WardName == myWard.WARD1 && b.Occupied == false
+                                       select b;
+
+                if (selectionChambre.Count() > 0)
+                {
+                    SelectionPatientChambre.ItemsSource = selectionChambre;
+                }
+
+            }
+
+        }
+
         private void SelectionPatientAile_DropDownClosed(object sender, EventArgs e)
         {
             Ward myWard = null;
@@ -129,6 +211,9 @@ namespace HLN_645_050537
             }
         }
 
+        // ****************************************************//
+        // Creer le dossier d'admission dans la base de donnée //
+        // ****************************************************//
         private void AdmissionAcceter_Click(object sender, RoutedEventArgs e)
         {
             // Besoin de rajouter de la validation pour validé que les combobos sont selectionnez
@@ -137,9 +222,67 @@ namespace HLN_645_050537
             Bed myAdmissionBed = (Bed)SelectionPatientChambre.SelectedValue;
             string admissionId = DateTime.Now.ToString("M/d/yyyy") + "-" + myHealthNumber;
 
-            context.InsereAdmission(admissionId, myHealthNumber, myAdmissionBed.BedNumber, DateTime.Now);
+            if (myHealthNumber != "" && myAdmissionBed != null)
+            {
+                context.InsereAdmission(admissionId, myHealthNumber, myAdmissionBed.BedNumber, DateTime.Now);
+                MessageBox.Show("Admission complété" );
+                myAdmissionBed = null;
+                myHealthNumber = "";
+                SelectionPatientAdmission.SelectedIndex = -1;
+                SelectionPatientAile.SelectedIndex = -1;
+                SelectionPatientChambre.SelectedIndex = -1;
+            }
+            else
+            {
+                MessageBox.Show("Veuilles faire les selection");
+            }
         }
 
+        // Load la liste des patient pouvant avoir un congé quand on click sur Docteur / congé
+        private void btnDocteurCongePatient_Click(object sender, RoutedEventArgs e)
+        {
+            DocteurCongePatient.Visibility = Visibility.Visible;
+
+            var query = from p in context.AdmissionRecords
+                        where p.DischargeDate == null
+                        select p;
+
+            ListePatientHositaliser.DataContext = query;
+        }
+        
+        // ****************************************************//
+        // Trait le congé d'un patient                         //
+        // ****************************************************//
+        private void Button_Click(object sender, RoutedEventArgs e)  // Congé Patient
+        {
+            AdmissionRecord MyPatienConge = new AdmissionRecord();
+            MyPatienConge = (AdmissionRecord)ListePatientHositaliser.SelectedItem;
+
+            try
+            {
+                context.CongePatient(MyPatienConge.AdmissionID, MyPatienConge.BedNumber);
+                MessageBox.Show("Le congé du patient a été traité");
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                var query = from p in context.AdmissionRecords
+                            where p.DischargeDate == null
+                            select p;
+
+                ListePatientHositaliser.DataContext = query;
+            }
+        }
+
+        // ****************************************************//
+        /// Insertion d'un Docteur dans le DB 
+        // ****************************************************//
+        // Rajout de validation a faire sur champ a entré
+        // ****************************************************//
         private void btnInsereDocteur_Click(object sender, RoutedEventArgs e)
         {
             bool validSpecialty = false;
@@ -157,7 +300,6 @@ namespace HLN_645_050537
             {
                 MessageBox.Show("Vous devez choisir une spécialté");
             }
-
 
             if (tbAdminGereDocId.Text != "")
             {
@@ -200,6 +342,7 @@ namespace HLN_645_050537
             }
         }
 
+        // Genere collection de tous les Docteur
         private ObservableCollection<Doctor> GetAllDoctors()
         {
             ObservableCollection<Doctor> myDoctorList = new ObservableCollection<Doctor>();
@@ -218,6 +361,26 @@ namespace HLN_645_050537
             return myDoctorList;
         }
 
+        //Genere collection des patient presentement admis a l'hopitale
+        private ObservableCollection<ViewListeDesPatient> GetPatientAdmis()
+        {
+            ObservableCollection<ViewListeDesPatient> myPatientAdmisList = new ObservableCollection<ViewListeDesPatient>();
+            try
+            {
+                var getlist = context.ViewListeDesPatients;
+                foreach (var item in getlist)
+                {
+                    myPatientAdmisList.Add(item);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Erreur de connection a la base de donnée");
+            }
+            return myPatientAdmisList;
+        }
+
+        // genere la collection de tous les patients de l'hopital
         private ObservableCollection<Patient> GetAllPatient()
         {
             ObservableCollection<Patient> myPatientList = new ObservableCollection<Patient>();
@@ -236,6 +399,9 @@ namespace HLN_645_050537
             return myPatientList;
         }
 
+        // ****************************************************//
+        // Trait la modification d'un docteur                  //
+        // ****************************************************//
         private void btnModifDocteur_Click(object sender, RoutedEventArgs e)
         {
             Doctor mySelectedDoc = (Doctor)ListeDesDocteurs.SelectedItem;
@@ -268,7 +434,6 @@ namespace HLN_645_050537
                     {
                         MessageBox.Show(ex.Message);
                     }
-                    
                 }
                 if (query.Count() > 1)
                 {
@@ -281,6 +446,9 @@ namespace HLN_645_050537
             }
         }
 
+        // ****************************************************//
+        // Trait la suprresion d'un docteur                    //
+        // ****************************************************//
         private void btnSuprimeDocteur_Click(object sender, RoutedEventArgs e)
         {
             Doctor mySelectedDoc = (Doctor)ListeDesDocteurs.SelectedItem;
@@ -299,6 +467,7 @@ namespace HLN_645_050537
             try
             {
                 context.SubmitChanges();
+                MessageBox.Show("Le docteur a été supprimé");
             }
             catch (Exception ex)
             {
@@ -311,6 +480,9 @@ namespace HLN_645_050537
            
         }
 
+        // ****************************************************//
+        // Trait la l'insertion d'un patient                   //
+        // ****************************************************//
         private void PreposerInserePatient_Click(object sender, RoutedEventArgs e)
         {
             // Validation des champs a faire, longueur pertinence etc etc
@@ -341,11 +513,12 @@ namespace HLN_645_050537
             myNewPatient.NextOfKinRelationship = LienParente.TrimEnd();
             myNewPatient.Doctor = mySelectedDoc.DoctorID.TrimEnd();
 
-            //MessageBox.Show("Insere patient ici " + mySelectedDoc.DoctorID);
+            
             try
             {
                 context.Patients.InsertOnSubmit(myNewPatient);
                 context.SubmitChanges();
+                MessageBox.Show("Le patient a été inséré");
             }
             catch (Exception ex)
             {
@@ -356,10 +529,11 @@ namespace HLN_645_050537
                 myNewPatient = null;
                 ListeDesPatients.DataContext = GetAllPatient();
             }
-
-            
         }
 
+        // ****************************************************//
+        // Trait la la modification d'un patient               //
+        // ****************************************************//
         private void PreposerModifiePatient_Click(object sender, RoutedEventArgs e)
         {
             //validation des champs a faire !! pareil comme Insere client
@@ -377,7 +551,6 @@ namespace HLN_645_050537
                 {
                     MessageBox.Show("Veuillez choisir un lien de parenté");
                 }
-                //query.HealthNumber = tbPatienHealthNumber.Text.TrimEnd();
                 query.DateOfBirth = DOB.SelectedDate;
                 query.FirstName = tbPrenomPatient.Text.TrimEnd();
                 query.LastName = tbNomPatient.Text.TrimEnd();
@@ -395,6 +568,7 @@ namespace HLN_645_050537
             try
             {
                 context.SubmitChanges();
+                MessageBox.Show("Le patient a été modifié");
             }
             catch (Exception ex)
             {
@@ -407,6 +581,9 @@ namespace HLN_645_050537
 
         }
 
+        // ****************************************************//
+        // Trait la la supression d'un patient                 //
+        // ****************************************************//
         private void PreposerSupprimePatient_Click(object sender, RoutedEventArgs e)
         {
             var query = (from myDeletedPatient in context.Patients
@@ -418,6 +595,7 @@ namespace HLN_645_050537
             try
             {
                 context.SubmitChanges();
+                MessageBox.Show("Le patient a été suprimé");
             }
             catch (Exception ex)
             {
@@ -430,34 +608,24 @@ namespace HLN_645_050537
 
         }
 
-        private void btnDocteurCongePatient_Click(object sender, RoutedEventArgs e)
-        {
-            DocteurCongePatient.Visibility = Visibility.Visible;
-        }
-
-        private void InfirmiereListePatient_Click(object sender, RoutedEventArgs e)
-        {
-            InfirmiereListeDesPatients.Visibility = Visibility.Visible;
-        }
-
+        // function bypass pour remplir le combobox par programation (binding ne fonctionne pas)
         private void ListeDesPatients_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Patient mySelectedPatient = (Patient)ListeDesPatients.SelectedItem;
-            //MessageBox.Show("Selection changed" + mySelectedPatient.Doctor1.DoctorID);
             if (mySelectedPatient != null)
             {
                 DocteurListe.SelectedItem = mySelectedPatient.Doctor1;
             }
-                
         }
 
+      }
 
-    }
-
+    // ****************************************************//
+    // Converter pour effacé les espaces dans les combobox //
+    // ****************************************************//
     [ValueConversion(typeof(string), typeof(string))]
     public class StringTrimmingConverter : IValueConverter
     {
-        #region IValueConverter Members
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             return value.ToString().Trim();
@@ -466,10 +634,6 @@ namespace HLN_645_050537
         {
             return value;
         }
-        #endregion
     }
-
-
-
 }
 
