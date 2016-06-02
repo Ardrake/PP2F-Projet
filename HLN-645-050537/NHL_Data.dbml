@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NLH-645-050537" Class="NHL_DataDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=CABANONS00006V;Initial Catalog=NLH-645-050537;Integrated Security=True" SettingsObjectName="HLN_645_050537.Properties.Settings" SettingsPropertyName="NLH_645_050537ConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=ANDRE-PC;Initial Catalog=NLH-645-050537;Integrated Security=True" SettingsObjectName="HLN_645_050537.Properties.Settings" SettingsPropertyName="NLH_645_050537ConnectionString1" Provider="System.Data.SqlClient" />
   <Table Name="dbo.AdmissionRecords" Member="AdmissionRecords">
     <Type Name="AdmissionRecord">
       <Column Name="AdmissionID" Type="System.String" DbType="NChar(30) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -83,11 +83,41 @@
       <Association Name="Specialty_Doctor" Member="Doctors" ThisKey="SpecialtyID" OtherKey="Specialty" Type="Doctor" />
     </Type>
   </Table>
+  <Table Name="dbo.Wards" Member="Wards">
+    <Type Name="Ward">
+      <Column Name="WARD" Member="WARD1" Type="System.String" DbType="NChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+    </Type>
+  </Table>
   <Function Name="dbo.InsereDocteur" Method="InsereDocteur">
     <Parameter Name="Id" Parameter="id" Type="System.String" DbType="NChar(4)" />
     <Parameter Name="LastName" Parameter="lastName" Type="System.String" DbType="NChar(30)" />
     <Parameter Name="FirstName" Parameter="firstName" Type="System.String" DbType="NChar(30)" />
     <Parameter Name="Specialty" Parameter="specialty" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.GetPatientAdmission" Method="GetPatientAdmission" IsComposable="true">
+    <ElementType Name="GetPatientAdmissionResult">
+      <Column Name="HealthNumber" Type="System.String" DbType="NChar(15) NOT NULL" CanBeNull="false" />
+      <Column Name="DateOfBirth" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="LastName" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Column Name="FirstName" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="NChar(50)" CanBeNull="true" />
+      <Column Name="City" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Column Name="Province" Type="System.String" DbType="NChar(15)" CanBeNull="true" />
+      <Column Name="PostalCode" Type="System.String" DbType="NChar(7)" CanBeNull="true" />
+      <Column Name="Phone" Type="System.String" DbType="NChar(14)" CanBeNull="true" />
+      <Column Name="InsuranceCompany" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Column Name="InsuranceNumber" Type="System.String" DbType="NChar(15)" CanBeNull="true" />
+      <Column Name="NextOfKin" Type="System.String" DbType="NChar(30)" CanBeNull="true" />
+      <Column Name="NextOfKinRelationship" Type="System.String" DbType="NChar(10)" CanBeNull="true" />
+      <Column Name="Doctor" Type="System.String" DbType="NChar(4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.InsereAdmission" Method="InsereAdmission">
+    <Parameter Name="AdmissionId" Parameter="admissionId" Type="System.String" DbType="NChar(30)" />
+    <Parameter Name="PatientID" Parameter="patientID" Type="System.String" DbType="NChar(15)" />
+    <Parameter Name="BedNumber" Parameter="bedNumber" Type="System.String" DbType="NChar(3)" />
+    <Parameter Name="AdmitDate" Parameter="admitDate" Type="System.DateTime" DbType="Date" />
     <Return Type="System.Int32" />
   </Function>
 </Database>

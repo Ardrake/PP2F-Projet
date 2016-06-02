@@ -78,12 +78,18 @@
         <elementListCompartment Id="6de2f2b8-431d-453b-8de3-4d4bbe33390f" absoluteBounds="3.64, 5.835, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(3.625 : 5.97199625651042); (2.75 : 5.97199625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(3.625 : 5.97199625651042); (2.75 : 5.97199625651042)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NHL_DataDataContext/Specialty/Specialty_Doctor" />
       <nodes>
         <classShapeMoniker Id="7a7e57e5-e570-4e87-8439-3677aa9e3617" />
         <classShapeMoniker Id="d41acc71-6a62-4588-b95e-6e7b3d72819d" />
       </nodes>
     </associationConnector>
+    <classShape Id="254cb138-6f9f-412a-a11c-4ef6c22e547a" absoluteBounds="6.875, 5.5, 2, 1.0016910807291668">
+      <DataClassMoniker Name="/NHL_DataDataContext/Ward" />
+      <nestedChildShapes>
+        <elementListCompartment Id="3e99a704-9f9d-46f1-96b2-8b315281b916" absoluteBounds="6.89, 5.96, 1.9700000000000002, 0.44169108072916669" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HLN_645_050537"
         mc:Ignorable="d"
-        Title="MenuPrincipale" Height="800" Width="1000">
+        Title="MenuPrincipale" Height="1800" Width="1000">
     <Window.Resources>
         <local:StringTrimmingConverter x:Key="converter"/>
     </Window.Resources>
@@ -13,6 +13,10 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -191,26 +195,75 @@
             </StackPanel>
         </Border>
 
-        <Border x:Name="PreposerAdmissionPatient" Grid.Row="4" Grid.RowSpan="3" Grid.Column="2" Grid.ColumnSpan="10" Visibility="hidden" BorderBrush="DarkOrange" BorderThickness="2" Margin="2" Width="600">
+        <Border x:Name="PreposerAdmissionPatient" Grid.Row="4" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="10" Visibility="Visible" BorderBrush="DarkOrange" BorderThickness="2" Margin="2" Width="600">
             <StackPanel Orientation="Vertical" Margin="5">
-                <Label Content="Admission Patient"/>
-                
+                <Label Content="Admission Patient" />
+                <Separator Margin="10,0,0,0"/>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Choisir le patient" Width="150"/>
+                    <ComboBox x:Name="SelectionPatientAdmission" Width="300">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Path=LastName, Converter={StaticResource converter}}"/>
+                                    <TextBlock Text=", "/>
+                                    <TextBlock Text="{Binding Path=FirstName, Converter={StaticResource converter}}"/>
+                                    <TextBlock Text=" - "/>
+                                    <TextBlock Text="{Binding Path=HealthNumber, Converter={StaticResource converter}}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Choisir l'aile" Width="150"/>
+                    <ComboBox x:Name="SelectionPatientAile" Width="300" DropDownClosed="SelectionPatientAile_DropDownClosed">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                    <TextBlock Text="{Binding Path=WARD1}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Choisir la chambre" Width="150"/>
+                    <ComboBox x:Name="SelectionPatientChambre" Width="300">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Path=BedNumber}"/>
+                                    <TextBlock Text=" - "/>
+                                    <TextBlock Text="{Binding Path=BedType}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <Separator Margin="10,10"/>
+                <Button x:Name="AdmissionAcceter" Content="Accepter" HorizontalAlignment="Right" Width="120" Click="AdmissionAcceter_Click"/>
+
             </StackPanel>
         </Border>
 
-        <Border x:Name="PreposerGestionPatient" Grid.Row="4" Grid.RowSpan="3" Grid.Column="2" Grid.ColumnSpan="10" Visibility="Visible" BorderBrush="DarkOrange" BorderThickness="2" Margin="2" Width="600">
+        <Border x:Name="PreposerGestionPatient" Grid.Row="4" Grid.RowSpan="3" Grid.Column="2" Grid.ColumnSpan="10" Visibility="Hidden" BorderBrush="DarkOrange" BorderThickness="2" Margin="2" Width="600">
             <StackPanel Orientation="Vertical" Margin="5">
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="# Assurance :" Width="100" />
-                    <TextBox x:Name="tbNumeroAssurance" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.HealthNumber, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
-                    <Label Content="Cie Assurance: " Width="100"/>
+                    <Label Content="Prénom :" Width="120"/>
+                    <TextBox x:Name="tbPrenomPatient" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.FirstName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+                    <Label Content="Nom :" Width="120"/>
+                    <TextBox x:Name="tbNomPatient" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="ID :" Width="120" />
+                    <TextBox x:Name="tbPatienHealthNumber" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.HealthNumber, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+                    <Label Content="Cie Assurance: " Width="120"/>
                     <TextBox x:Name="tbCieAssurance" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.InsuranceCompany, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="Nom :" Width="100"/>
-                    <TextBox x:Name="tbNomPatien" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.LastName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
-                    <Label Content="Prénom :" Width="100"/>
-                    <TextBox x:Name="tbPrenomPatient" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.FirstName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+                    <Label Content="Date de naissance" Width="120"/>
+                    <DatePicker x:Name="DOB" Width="150"/>
+                    <Label Content="# Assurance :" Width="120" />
+                    <TextBox x:Name="tbNumeroAssurance" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.HealthNumber, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
                 </StackPanel>
                 <Label Content=""/>
                 <StackPanel Orientation="Horizontal">
@@ -219,7 +272,7 @@
                     <Label Content="Médecin" Margin="10,0"/>
                     <ComboBox Name="DocteurListe" Height="23 " Width="150" HorizontalAlignment="Left" IsEditable="False" 
                               SelectedValue="{Binding ElementName=ListeDesPatients, Path=Doctor1.Doctor, Mode=OneWay, 
-                                              UpdateSourceTrigger=PropertyChanged}" SelectionChanged="DocteurListe_SelectionChanged">
+                                              UpdateSourceTrigger=PropertyChanged}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -249,7 +302,7 @@
                     <Label Content="Téléphone : "  Width="100"/>
                     <TextBox x:Name="tbtelPatient" Text="{Binding ElementName=ListeDesPatients, Path=SelectedItem.Phone, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
                     <Label Content="Lien : " Margin="100,0,20,0"/>
-                    <ComboBox Width="170">
+                    <ComboBox x:Name="ComboLienParente"  Width="170">
                         <ComboBoxItem Content="Mère"/>
                         <ComboBoxItem Content="Père"/>
                         <ComboBoxItem Content="Frère"/>
@@ -296,7 +349,7 @@
                         <DataGridTemplateColumn Header="Date de naissance">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding DateOfBirth}"/>
+                                    <TextBlock Text="{Binding DateOfBirth, StringFormat=\{0:d\}}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

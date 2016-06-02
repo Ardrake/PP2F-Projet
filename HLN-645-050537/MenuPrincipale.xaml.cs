@@ -22,8 +22,8 @@ namespace HLN_645_050537
     {
         public string SelectedSpecialty { get; set; }
 
-        NHL_DataDataContext context = new NHL_DataDataContext("Data Source = CABANONS00006V; Initial Catalog = NLH-645-050537; Integrated Security = True");
-        //NHL_DataDataContext context = new NHL_DataDataContext("Data Source = ANDRE-PC; Initial Catalog = NLH-645-050537; Integrated Security = True");
+        //NHL_DataDataContext context = new NHL_DataDataContext("Data Source = CABANONS00006V; Initial Catalog = NLH-645-050537; Integrated Security = True");
+        NHL_DataDataContext context = new NHL_DataDataContext("Data Source = ANDRE-PC; Initial Catalog = NLH-645-050537; Integrated Security = True");
 
         public MenuPrincipale()
         {
@@ -105,6 +105,39 @@ namespace HLN_645_050537
         {
             PreposerAdmissionPatient.Visibility = Visibility.Visible;
             PreposerGestionPatient.Visibility = Visibility.Collapsed;
+            SelectionPatientAile.ItemsSource = context.Wards;
+
+            var selecPatientAdmission = from p in context.GetPatientAdmission()
+                                        select p;
+
+            SelectionPatientAdmission.ItemsSource = selecPatientAdmission;
+        }
+
+        private void SelectionPatientAile_DropDownClosed(object sender, EventArgs e)
+        {
+            Ward myWard = null;
+
+            myWard = (Ward)SelectionPatientAile.SelectedValue;
+
+            var selectionChambre = from b in context.Beds
+                                   where b.WardName == myWard.WARD1 && b.Occupied == false
+                                   select b;
+
+            if (selectionChambre.Count() > 0)
+            {
+                SelectionPatientChambre.ItemsSource = selectionChambre;
+            }
+        }
+
+        private void AdmissionAcceter_Click(object sender, RoutedEventArgs e)
+        {
+            // Besoin de rajouter de la validation pour validé que les combobos sont selectionnez
+            string myHealthNumber = "";
+            myHealthNumber = ((GetPatientAdmissionResult)SelectionPatientAdmission.SelectedItem).HealthNumber;
+            Bed myAdmissionBed = (Bed)SelectionPatientChambre.SelectedValue;
+            string admissionId = DateTime.Now.ToString("M/d/yyyy") + "-" + myHealthNumber;
+
+            context.InsereAdmission(admissionId, myHealthNumber, myAdmissionBed.BedNumber, DateTime.Now);
         }
 
         private void btnInsereDocteur_Click(object sender, RoutedEventArgs e)
@@ -280,18 +313,120 @@ namespace HLN_645_050537
 
         private void PreposerInserePatient_Click(object sender, RoutedEventArgs e)
         {
+            // Validation des champs a faire, longueur pertinence etc etc
             Doctor mySelectedDoc = (Doctor)DocteurListe.SelectedItem;
-            MessageBox.Show("Insere patient ici " + mySelectedDoc.DoctorID);
+            string LienParente = "";
+            try
+            {
+                LienParente = ((ComboBoxItem)ComboLienParente.SelectedItem).Content.ToString();
+            }
+            catch
+            {
+                MessageBox.Show("Veuillez choisir un lien de parenté");
+            }
+
+            Patient myNewPatient = new Patient();
+            myNewPatient.HealthNumber = tbPatienHealthNumber.Text.TrimEnd();
+            myNewPatient.DateOfBirth = DOB.SelectedDate;
+            myNewPatient.FirstName = tbPrenomPatient.Text.TrimEnd();
+            myNewPatient.LastName = tbNomPatient.Text.TrimEnd();
+            myNewPatient.Address = tbAddressePatient.Text.TrimEnd();
+            myNewPatient.City = tbVillePatient.Text.TrimEnd();
+            myNewPatient.Province = tbProvincePatient.Text.TrimEnd();
+            myNewPatient.PostalCode = tbCPPatient.Text.TrimEnd();
+            myNewPatient.Phone = tbtelPatient.Text.TrimEnd();
+            myNewPatient.InsuranceCompany = tbCieAssurance.Text.TrimEnd();
+            myNewPatient.InsuranceNumber = tbNumeroAssurance.Text.TrimEnd();
+            myNewPatient.NextOfKin = tbContactPatient.Text.TrimEnd();
+            myNewPatient.NextOfKinRelationship = LienParente.TrimEnd();
+            myNewPatient.Doctor = mySelectedDoc.DoctorID.TrimEnd();
+
+            //MessageBox.Show("Insere patient ici " + mySelectedDoc.DoctorID);
+            try
+            {
+                context.Patients.InsertOnSubmit(myNewPatient);
+                context.SubmitChanges();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                myNewPatient = null;
+                ListeDesPatients.DataContext = GetAllPatient();
+            }
+
             
         }
 
         private void PreposerModifiePatient_Click(object sender, RoutedEventArgs e)
         {
+            //validation des champs a faire !! pareil comme Insere client
+            var query = (from myModifiedPatient in context.Patients
+                         where myModifiedPatient.HealthNumber == tbPatienHealthNumber.Text.TrimEnd()
+                         select myModifiedPatient).First();
+
+                Doctor mySelectedDoc = (Doctor)DocteurListe.SelectedItem;
+                string LienParente = "";
+                try
+                {
+                    LienParente = ((ComboBoxItem)ComboLienParente.SelectedItem).Content.ToString();
+                }
+                catch
+                {
+                    MessageBox.Show("Veuillez choisir un lien de parenté");
+                }
+                //query.HealthNumber = tbPatienHealthNumber.Text.TrimEnd();
+                query.DateOfBirth = DOB.SelectedDate;
+                query.FirstName = tbPrenomPatient.Text.TrimEnd();
+                query.LastName = tbNomPatient.Text.TrimEnd();
+                query.Address = tbAddressePatient.Text.TrimEnd();
+                query.City = tbVillePatient.Text.TrimEnd();
+                query.Province = tbProvincePatient.Text.TrimEnd();
+                query.PostalCode = tbCPPatient.Text.TrimEnd();
+                query.Phone = tbtelPatient.Text.TrimEnd();
+                query.InsuranceCompany = tbCieAssurance.Text.TrimEnd();
+                query.InsuranceNumber = tbNumeroAssurance.Text.TrimEnd();
+                query.NextOfKin = tbContactPatient.Text.TrimEnd();
+                query.NextOfKinRelationship = LienParente.TrimEnd();
+                query.Doctor = mySelectedDoc.DoctorID.TrimEnd();
+
+            try
+            {
+                context.SubmitChanges();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                ListeDesPatients.DataContext = GetAllPatient();
+            }
 
         }
 
         private void PreposerSupprimePatient_Click(object sender, RoutedEventArgs e)
         {
+            var query = (from myDeletedPatient in context.Patients
+                         where myDeletedPatient.HealthNumber == tbPatienHealthNumber.Text.TrimEnd()
+                         select myDeletedPatient).First();
+
+            context.Patients.DeleteOnSubmit(query);
+
+            try
+            {
+                context.SubmitChanges();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                ListeDesPatients.DataContext = GetAllPatient();
+            }
 
         }
 
@@ -307,16 +442,16 @@ namespace HLN_645_050537
 
         private void ListeDesPatients_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
             Patient mySelectedPatient = (Patient)ListeDesPatients.SelectedItem;
             //MessageBox.Show("Selection changed" + mySelectedPatient.Doctor1.DoctorID);
-            DocteurListe.SelectedItem = mySelectedPatient.Doctor1;
+            if (mySelectedPatient != null)
+            {
+                DocteurListe.SelectedItem = mySelectedPatient.Doctor1;
+            }
+                
         }
 
-        private void DocteurListe_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            
-        }
+
     }
 
     [ValueConversion(typeof(string), typeof(string))]

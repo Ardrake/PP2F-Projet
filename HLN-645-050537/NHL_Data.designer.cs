@@ -48,10 +48,13 @@ namespace HLN_645_050537
     partial void InsertSpecialty(Specialty instance);
     partial void UpdateSpecialty(Specialty instance);
     partial void DeleteSpecialty(Specialty instance);
+    partial void InsertWard(Ward instance);
+    partial void UpdateWard(Ward instance);
+    partial void DeleteWard(Ward instance);
     #endregion
 		
 		public NHL_DataDataContext() : 
-				base(global::HLN_645_050537.Properties.Settings.Default.NLH_645_050537ConnectionString, mappingSource)
+				base(global::HLN_645_050537.Properties.Settings.Default.NLH_645_050537ConnectionString1, mappingSource)
 		{
 			OnCreated();
 		}
@@ -144,10 +147,31 @@ namespace HLN_645_050537
 			}
 		}
 		
+		public System.Data.Linq.Table<Ward> Wards
+		{
+			get
+			{
+				return this.GetTable<Ward>();
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.InsereDocteur")]
 		public int InsereDocteur([global::System.Data.Linq.Mapping.ParameterAttribute(Name="Id", DbType="NChar(4)")] string id, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LastName", DbType="NChar(30)")] string lastName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FirstName", DbType="NChar(30)")] string firstName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Specialty", DbType="Int")] System.Nullable<int> specialty)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), id, lastName, firstName, specialty);
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetPatientAdmission", IsComposable=true)]
+		public IQueryable<GetPatientAdmissionResult> GetPatientAdmission()
+		{
+			return this.CreateMethodCallQuery<GetPatientAdmissionResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.InsereAdmission")]
+		public int InsereAdmission([global::System.Data.Linq.Mapping.ParameterAttribute(Name="AdmissionId", DbType="NChar(30)")] string admissionId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PatientID", DbType="NChar(15)")] string patientID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="BedNumber", DbType="NChar(3)")] string bedNumber, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="AdmitDate", DbType="Date")] System.Nullable<System.DateTime> admitDate)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), admissionId, patientID, bedNumber, admitDate);
 			return ((int)(result.ReturnValue));
 		}
 	}
@@ -1704,6 +1728,328 @@ namespace HLN_645_050537
 		{
 			this.SendPropertyChanging();
 			entity.Specialty1 = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Wards")]
+	public partial class Ward : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _WARD1;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnWARD1Changing(string value);
+    partial void OnWARD1Changed();
+    #endregion
+		
+		public Ward()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="WARD", Storage="_WARD1", DbType="NChar(50) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string WARD1
+		{
+			get
+			{
+				return this._WARD1;
+			}
+			set
+			{
+				if ((this._WARD1 != value))
+				{
+					this.OnWARD1Changing(value);
+					this.SendPropertyChanging();
+					this._WARD1 = value;
+					this.SendPropertyChanged("WARD1");
+					this.OnWARD1Changed();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	public partial class GetPatientAdmissionResult
+	{
+		
+		private string _HealthNumber;
+		
+		private System.Nullable<System.DateTime> _DateOfBirth;
+		
+		private string _LastName;
+		
+		private string _FirstName;
+		
+		private string _Address;
+		
+		private string _City;
+		
+		private string _Province;
+		
+		private string _PostalCode;
+		
+		private string _Phone;
+		
+		private string _InsuranceCompany;
+		
+		private string _InsuranceNumber;
+		
+		private string _NextOfKin;
+		
+		private string _NextOfKinRelationship;
+		
+		private string _Doctor;
+		
+		public GetPatientAdmissionResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HealthNumber", DbType="NChar(15) NOT NULL", CanBeNull=false)]
+		public string HealthNumber
+		{
+			get
+			{
+				return this._HealthNumber;
+			}
+			set
+			{
+				if ((this._HealthNumber != value))
+				{
+					this._HealthNumber = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateOfBirth", DbType="DateTime")]
+		public System.Nullable<System.DateTime> DateOfBirth
+		{
+			get
+			{
+				return this._DateOfBirth;
+			}
+			set
+			{
+				if ((this._DateOfBirth != value))
+				{
+					this._DateOfBirth = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastName", DbType="NChar(30)")]
+		public string LastName
+		{
+			get
+			{
+				return this._LastName;
+			}
+			set
+			{
+				if ((this._LastName != value))
+				{
+					this._LastName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FirstName", DbType="NChar(30)")]
+		public string FirstName
+		{
+			get
+			{
+				return this._FirstName;
+			}
+			set
+			{
+				if ((this._FirstName != value))
+				{
+					this._FirstName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="NChar(50)")]
+		public string Address
+		{
+			get
+			{
+				return this._Address;
+			}
+			set
+			{
+				if ((this._Address != value))
+				{
+					this._Address = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_City", DbType="NChar(30)")]
+		public string City
+		{
+			get
+			{
+				return this._City;
+			}
+			set
+			{
+				if ((this._City != value))
+				{
+					this._City = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Province", DbType="NChar(15)")]
+		public string Province
+		{
+			get
+			{
+				return this._Province;
+			}
+			set
+			{
+				if ((this._Province != value))
+				{
+					this._Province = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostalCode", DbType="NChar(7)")]
+		public string PostalCode
+		{
+			get
+			{
+				return this._PostalCode;
+			}
+			set
+			{
+				if ((this._PostalCode != value))
+				{
+					this._PostalCode = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Phone", DbType="NChar(14)")]
+		public string Phone
+		{
+			get
+			{
+				return this._Phone;
+			}
+			set
+			{
+				if ((this._Phone != value))
+				{
+					this._Phone = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_InsuranceCompany", DbType="NChar(30)")]
+		public string InsuranceCompany
+		{
+			get
+			{
+				return this._InsuranceCompany;
+			}
+			set
+			{
+				if ((this._InsuranceCompany != value))
+				{
+					this._InsuranceCompany = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_InsuranceNumber", DbType="NChar(15)")]
+		public string InsuranceNumber
+		{
+			get
+			{
+				return this._InsuranceNumber;
+			}
+			set
+			{
+				if ((this._InsuranceNumber != value))
+				{
+					this._InsuranceNumber = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NextOfKin", DbType="NChar(30)")]
+		public string NextOfKin
+		{
+			get
+			{
+				return this._NextOfKin;
+			}
+			set
+			{
+				if ((this._NextOfKin != value))
+				{
+					this._NextOfKin = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NextOfKinRelationship", DbType="NChar(10)")]
+		public string NextOfKinRelationship
+		{
+			get
+			{
+				return this._NextOfKinRelationship;
+			}
+			set
+			{
+				if ((this._NextOfKinRelationship != value))
+				{
+					this._NextOfKinRelationship = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Doctor", DbType="NChar(4)")]
+		public string Doctor
+		{
+			get
+			{
+				return this._Doctor;
+			}
+			set
+			{
+				if ((this._Doctor != value))
+				{
+					this._Doctor = value;
+				}
+			}
 		}
 	}
 }
