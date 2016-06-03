@@ -22,35 +22,66 @@ namespace HLN_645_050537
     {
         public string SelectedSpecialty { get; set; }
 
-        NHL_DataDataContext context = new NHL_DataDataContext("Data Source = CABANONS00171; Initial Catalog = NLH-645-050537; Integrated Security = True");
-        //NHL_DataDataContext context = new NHL_DataDataContext("Data Source = ANDRE-PC; Initial Catalog = NLH-645-050537; Integrated Security = True");
+        //NHL_DataDataContext context = new NHL_DataDataContext("Data Source = CABANONS00171; Initial Catalog = NLH-645-050537; Integrated Security = True");
+        NHL_DataDataContext context = new NHL_DataDataContext("Data Source = ANDRE-PC; Initial Catalog = NLH-645-050537; Integrated Security = True");
 
-        public MenuPrincipale()
+        public MenuPrincipale(String user)
         {
             InitializeComponent();
+
+            if (user == "admin")
+            {
+                HideAll(); 
+                ZoneAdmin.Visibility = Visibility.Visible;
+            }
+            if (user == "Docteur")
+            {
+                HideAll();
+                ZoneDocteur.Visibility = Visibility.Visible;
+            }
+            if (user == "Infirmière")
+            {
+                HideAll();
+                ZoneInfirmiere.Visibility = Visibility.Visible;
+            }
+            if (user == "Preposé")
+            {
+                HideAll();
+                ZonePreposer.Visibility = Visibility.Visible;
+            }
+            if (user == "Cooke")
+            {
+                HideAll();
+                SectionCooke.Visibility = Visibility.Visible;
+            }
+            sbUser.Text = user;
         }
 
         private void SwtichAdmin_Click(object sender, RoutedEventArgs e)
         {
             HideAll();
+            SectionCooke.Visibility = Visibility.Visible;
             ZoneAdmin.Visibility = Visibility.Visible;
         }
 
         private void SwtichDocteur_Click(object sender, RoutedEventArgs e)
         {
             HideAll();
+            SectionCooke.Visibility = Visibility.Visible;
             ZoneDocteur.Visibility = Visibility.Visible;
         }
 
         private void SwtichInfirmiere_Click(object sender, RoutedEventArgs e)
         {
             HideAll();
+            SectionCooke.Visibility = Visibility.Visible;
             ZoneInfirmiere.Visibility = Visibility.Visible;
         }
 
         private void SwtichPreposer_Click(object sender, RoutedEventArgs e)
         {
             HideAll();
+            SectionCooke.Visibility = Visibility.Visible;
             ZonePreposer.Visibility = Visibility.Visible;
         }
 
@@ -66,24 +97,15 @@ namespace HLN_645_050537
             DocteurCongePatient.Visibility = Visibility.Collapsed;
             InfirmiereListeDesPatients.Visibility = Visibility.Collapsed;
             PreposerAdmissionPatient.Visibility = Visibility.Collapsed;
-            
+            SectionCooke.Visibility = Visibility.Collapsed;
         }
 
-        private void SwtichAll_Click(object sender, RoutedEventArgs e)
-        {
-            ZoneAdmin.Visibility = Visibility.Visible;
-            ZoneDocteur.Visibility = Visibility.Visible;
-            ZoneInfirmiere.Visibility = Visibility.Visible;
-            ZonePreposer.Visibility = Visibility.Visible;
-        }
-
-        private void AdminGereDocteur_Click(object sender, RoutedEventArgs e)
+       private void AdminGereDocteur_Click(object sender, RoutedEventArgs e)
         {
             ZoneAdminGereFacture.Visibility = Visibility.Collapsed;
             ZoneAdminGereDocteur.Visibility = Visibility.Visible;
             comboSpecialtyListe.ItemsSource = context.Specialties;
             ListeDesDocteurs.DataContext = GetAllDoctors();
-            
         }
 
         private void AdminGereFacture_Click(object sender, RoutedEventArgs e)
@@ -92,7 +114,7 @@ namespace HLN_645_050537
             ZoneAdminGereFacture.Visibility = Visibility.Visible;
 
             var query = from a in context.AdmissionRecords
-                        where a.Facture == false
+                        where a.Facture == false && a.DischargeDate != null
                         select a;
 
             ObservableCollection<AdmissionRecord> myFactureList = new ObservableCollection<AdmissionRecord>();
@@ -122,12 +144,194 @@ namespace HLN_645_050537
         // Bouton genere Facture
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            AdmissionRecord mySelectedAfacture = (AdmissionRecord)ListAFacture.SelectedItem;
+            String DescItem = "";
+            String MontantFacture = "0.00";
+            String DescTV = "";
+            String DescTel = "";
+            String DescTarif = " tarif chambre Standard";
+            decimal extTelRate = 0;
+            decimal extTVRate = 0;
+            decimal extRoomRate = 0;
+            decimal Total = 0;
 
+            TimeSpan difference = (TimeSpan)(mySelectedAfacture.DischargeDate - mySelectedAfacture.AdmitDate);
+            int totjours = Convert.ToInt32(difference.TotalDays);
+            
+
+            if (mySelectedAfacture.Extra.Phone == true)
+            {
+                decimal telrate = 0;
+                
+                var gettelrate = (from p in context.Extra_Rates
+                                  where p.AmenityName == "PHONE"
+                                  select p).First().DailyCost;
+
+                DescTel = " - Option téléphone - " + gettelrate + "$ par jours ";
+                telrate = Convert.ToDecimal(gettelrate);
+                extTelRate = totjours * telrate;
+            }
+
+            if (mySelectedAfacture.Extra.TV == true)
+            {
+                decimal tvrate = 0;
+
+                var gettvrate = (from p in context.Extra_Rates
+                                  where p.AmenityName == "TV"
+                                  select p).First().DailyCost;
+
+                DescTV = " - Option télévision - " + gettvrate + "$ par jours ";
+                tvrate = Convert.ToDecimal(gettvrate);
+                extTVRate = totjours * tvrate;
+            }
+
+            if (mySelectedAfacture.Extra.SemiPriivate == true)
+            {
+                decimal roomrate = 0;
+
+                var getroomrate = (from p in context.Extra_Rates
+                                 where p.AmenityName == "SEMI"
+                                 select p).First().DailyCost;
+
+                roomrate = Convert.ToDecimal(getroomrate);
+                extRoomRate = roomrate * totjours;
+
+                DescTarif = " tarif chambre Semi-Privé " + getroomrate + "$";
+            }
+
+            if (mySelectedAfacture.Extra.Private == true)
+            {
+                decimal roomrate = 0;
+
+                var getroomrate = (from p in context.Extra_Rates
+                                   where p.AmenityName == "PRIVÉ"
+                                   select p).First().DailyCost;
+
+                roomrate = Convert.ToDecimal(getroomrate);
+                extRoomRate = roomrate * totjours;
+
+                DescTarif = " tarif chambre Privé " + getroomrate + "$";
+            }
+
+            DescItem = "Hospitalisation de " + totjours.ToString() + " jours" + DescTel + DescTV + DescTarif;
+
+            Total = extRoomRate + extTelRate + extTVRate;
+            MontantFacture = Total.ToString()+"$";
+
+            Facture myfacture = new Facture(mySelectedAfacture, DescItem, MontantFacture);
+            myfacture.ShowDialog();
+
+            mySelectedAfacture.Facture = true;
+            context.SubmitChanges();
+
+            var query = from a in context.AdmissionRecords
+                        where a.Facture == false && a.DischargeDate != null
+                        select a;
+
+            ObservableCollection<AdmissionRecord> myFactureList = new ObservableCollection<AdmissionRecord>();
+
+            var getlist = query;
+            foreach (var item in getlist)
+            {
+                myFactureList.Add(item);
+            }
+
+            var queryTemine = from a in context.AdmissionRecords
+                              where a.Facture == true
+                              select a;
+
+            ObservableCollection<AdmissionRecord> myFactureListTermnine = new ObservableCollection<AdmissionRecord>();
+
+            var getlisttermine = queryTemine;
+            foreach (var item in getlisttermine)
+            {
+                myFactureListTermnine.Add(item);
+            }
+
+            ListAFacture.DataContext = myFactureList;
+            ListAFactureTermine.DataContext = myFactureListTermnine;
         }
 
         // Bouton re-impression facture
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
+            AdmissionRecord mySelectedAfacture = (AdmissionRecord)ListAFactureTermine.SelectedItem;
+            String DescItem = "";
+            String MontantFacture = "0.00";
+            String DescTV = "";
+            String DescTel = "";
+            String DescTarif = " tarif chambre Standard";
+            TimeSpan difference = new TimeSpan();
+            decimal extTelRate = 0;
+            decimal extTVRate = 0;
+            decimal extRoomRate = 0;
+            decimal Total = 0;
+
+            difference = (TimeSpan)(mySelectedAfacture.DischargeDate - mySelectedAfacture.AdmitDate);
+            int totjours = Convert.ToInt32(difference.TotalDays);
+
+
+            if (mySelectedAfacture.Extra.Phone == true)
+            {
+                decimal telrate = 0;
+
+                var gettelrate = (from p in context.Extra_Rates
+                                  where p.AmenityName == "PHONE"
+                                  select p).First().DailyCost;
+
+                DescTel = " - Option téléphone - " + gettelrate + "$ par jours ";
+                telrate = Convert.ToDecimal(gettelrate);
+                extTelRate = totjours * telrate;
+            }
+
+            if (mySelectedAfacture.Extra.TV == true)
+            {
+                decimal tvrate = 0;
+
+                var gettvrate = (from p in context.Extra_Rates
+                                 where p.AmenityName == "TV"
+                                 select p).First().DailyCost;
+
+                DescTV = " - Option télévision - " + gettvrate + "$ par jours ";
+                tvrate = Convert.ToDecimal(gettvrate);
+                extTVRate = totjours * tvrate;
+            }
+
+            if (mySelectedAfacture.Extra.SemiPriivate == true)
+            {
+                decimal roomrate = 0;
+
+                var getroomrate = (from p in context.Extra_Rates
+                                   where p.AmenityName == "SEMI"
+                                   select p).First().DailyCost;
+
+                roomrate = Convert.ToDecimal(getroomrate);
+                extRoomRate = roomrate * totjours;
+
+                DescTarif = " tarif chambre Semi-Privé " + getroomrate + "$";
+            }
+
+            if (mySelectedAfacture.Extra.Private == true)
+            {
+                decimal roomrate = 0;
+
+                var getroomrate = (from p in context.Extra_Rates
+                                   where p.AmenityName == "PRIVÉ"
+                                   select p).First().DailyCost;
+
+                roomrate = Convert.ToDecimal(getroomrate);
+                extRoomRate = roomrate * totjours;
+
+                DescTarif = " tarif chambre Privé " + getroomrate + "$";
+            }
+
+            DescItem = "Hospitalisation de " + totjours.ToString() + " jours" + DescTel + DescTV + DescTarif;
+
+            Total = extRoomRate + extTelRate + extTVRate;
+            MontantFacture = Total.ToString() + "$";
+
+            Facture myfacture = new Facture(mySelectedAfacture, DescItem, MontantFacture);
+            myfacture.ShowDialog();
 
         }
 
@@ -137,7 +341,6 @@ namespace HLN_645_050537
             PreposerAdmissionPatient.Visibility = Visibility.Collapsed;
             DocteurListe.ItemsSource = GetAllDoctors();
             ListeDesPatients.DataContext = GetAllPatient();
-
         }
 
         private void PreposerAdmission_Click(object sender, RoutedEventArgs e)
@@ -176,10 +379,7 @@ namespace HLN_645_050537
             if (Age < 18)
             {
                 SelectionPatientAile.SelectedIndex = 2;
-
-
                 Ward myWard = null;
-
                 myWard = (Ward)SelectionPatientAile.SelectedValue;
 
                 var selectionChambre = from b in context.Beds
@@ -190,9 +390,7 @@ namespace HLN_645_050537
                 {
                     SelectionPatientChambre.ItemsSource = selectionChambre;
                 }
-
             }
-
         }
 
         private void SelectionPatientAile_DropDownClosed(object sender, EventArgs e)
@@ -221,20 +419,104 @@ namespace HLN_645_050537
             myHealthNumber = ((GetPatientAdmissionResult)SelectionPatientAdmission.SelectedItem).HealthNumber;
             Bed myAdmissionBed = (Bed)SelectionPatientChambre.SelectedValue;
             string admissionId = DateTime.Now.ToString("M/d/yyyy") + "-" + myHealthNumber;
+            bool ExtraTV = false;
+            bool ExtraTel = false;
+            bool semiPrive = false;
+            bool prive = false;
+
+            if (checkTelevision.IsChecked == true)
+            {
+                ExtraTV = true;
+            }
+            else
+            { ExtraTV = false; }
+
+            if (checkTelephone.IsChecked == true)
+            {
+                ExtraTel = true;
+            }
+            else
+            { ExtraTel = false; }
+
+            if (RateText.Text == "Semi-Privé")
+            {
+                semiPrive = true;
+            }
+            else
+            { semiPrive = false; }
+
+            if (RateText.Text == "Privé")
+            {
+                prive = true;
+            }
+            else
+            { prive = false; }
 
             if (myHealthNumber != "" && myAdmissionBed != null)
             {
-                context.InsereAdmission(admissionId, myHealthNumber, myAdmissionBed.BedNumber, DateTime.Now);
+                try
+                {
+                    context.InsereAdmission(admissionId, myHealthNumber, myAdmissionBed.BedNumber, DateTime.Now, ExtraTV, ExtraTel, semiPrive, prive);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+
                 MessageBox.Show("Admission complété" );
                 myAdmissionBed = null;
                 myHealthNumber = "";
                 SelectionPatientAdmission.SelectedIndex = -1;
                 SelectionPatientAile.SelectedIndex = -1;
                 SelectionPatientChambre.SelectedIndex = -1;
+                checkTelephone.IsChecked = false;
+                checkTelevision.IsChecked = false;
             }
             else
             {
                 MessageBox.Show("Veuilles faire les selection");
+            }
+        }
+
+        private void SelectionPatientChambre_DropDownClosed(object sender, EventArgs e)
+        {
+            Bed myAdmissionBed = (Bed)SelectionPatientChambre.SelectedValue;
+            if(myAdmissionBed != null)
+            {
+                int totChambreStandard = (from b in context.Beds
+                                          where b.WardName == myAdmissionBed.WardName &&
+                                                b.BedType == "STANDARD" &&
+                                                b.Occupied == false
+                                          select b).Count();
+
+                int totChambreSemiPrive = (from b in context.Beds
+                                           where b.WardName == myAdmissionBed.WardName &&
+                                                 b.BedType == "SEMI-PRIVÉ" &&
+                                                 b.Occupied == false
+                                           select b).Count();
+
+                if (myAdmissionBed.BedType.TrimEnd() == "STANDARD")
+                {
+                    RateText.Text = "Standard";
+                }
+                if (myAdmissionBed.BedType.TrimEnd() == "SEMI-PRIVÉ")
+                {
+                    RateText.Text = "Semi-Privé";
+                }
+                if (myAdmissionBed.BedType.TrimEnd() == "PRIVÉ")
+                {
+                    RateText.Text = "Privé";
+                }
+                // Override frais aucune chambre standard de dispo
+                if (myAdmissionBed.BedType.TrimEnd() == "SEMI-PRIVÉ" && totChambreStandard == 0)
+                {
+                    RateText.Text = "Standard";
+                }
+                // Override frais aucune chambre semi-privé de dispo
+                if (myAdmissionBed.BedType.TrimEnd() == "PRIVÉ" && totChambreSemiPrive == 0)
+                {
+                    RateText.Text = "Semi-Privé";
+                }
             }
         }
 
@@ -400,7 +682,7 @@ namespace HLN_645_050537
         }
 
         // ****************************************************//
-        // Trait la modification d'un docteur                  //
+        // Traite la modification d'un docteur                  //
         // ****************************************************//
         private void btnModifDocteur_Click(object sender, RoutedEventArgs e)
         {
@@ -409,6 +691,7 @@ namespace HLN_645_050537
             var query = from doc in context.Doctors
                         where doc.DoctorID == mySelectedDoc.DoctorID
                         select doc;
+
             if (query != null)
             {
                 if (query.Count() == 1)
@@ -422,17 +705,15 @@ namespace HLN_645_050537
                     {
                         //comit les changement et re-init le formulaire
                         context.SubmitChanges();
-
-                        tbAdminGereDocId.Text = "";
-                        tbAdminGereDocPrenom.Text = "";
-                        tbAdminGereDocNom.Text = "";
-                        comboSpecialtyListe.SelectedIndex = -1;
-
-                        MessageBox.Show("Doctueur modifié");
+                        MessageBox.Show("Docteur modifié");
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message);
+                    }
+                    finally
+                    {
+                        ListeDesDocteurs.DataContext = GetAllDoctors();
                     }
                 }
                 if (query.Count() > 1)
@@ -447,7 +728,7 @@ namespace HLN_645_050537
         }
 
         // ****************************************************//
-        // Trait la suprresion d'un docteur                    //
+        // Traite la suprresion d'un docteur                    //
         // ****************************************************//
         private void btnSuprimeDocteur_Click(object sender, RoutedEventArgs e)
         {
@@ -477,11 +758,10 @@ namespace HLN_645_050537
             {
                 ListeDesDocteurs.DataContext = GetAllDoctors();
             }
-           
         }
 
         // ****************************************************//
-        // Trait la l'insertion d'un patient                   //
+        // Traite la l'insertion d'un patient                   //
         // ****************************************************//
         private void PreposerInserePatient_Click(object sender, RoutedEventArgs e)
         {
@@ -513,7 +793,6 @@ namespace HLN_645_050537
             myNewPatient.NextOfKinRelationship = LienParente.TrimEnd();
             myNewPatient.Doctor = mySelectedDoc.DoctorID.TrimEnd();
 
-            
             try
             {
                 context.Patients.InsertOnSubmit(myNewPatient);
@@ -532,7 +811,7 @@ namespace HLN_645_050537
         }
 
         // ****************************************************//
-        // Trait la la modification d'un patient               //
+        // Traite la la modification d'un patient               //
         // ****************************************************//
         private void PreposerModifiePatient_Click(object sender, RoutedEventArgs e)
         {
@@ -578,11 +857,10 @@ namespace HLN_645_050537
             {
                 ListeDesPatients.DataContext = GetAllPatient();
             }
-
         }
 
         // ****************************************************//
-        // Trait la la supression d'un patient                 //
+        // Traite la la supression d'un patient // NON ACTIF   //
         // ****************************************************//
         private void PreposerSupprimePatient_Click(object sender, RoutedEventArgs e)
         {
@@ -618,7 +896,18 @@ namespace HLN_645_050537
             }
         }
 
-      }
+        private void quitter_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+            Application.Current.Shutdown();
+        }
+
+        private void aPropos_Click(object sender, RoutedEventArgs e)
+        {
+            APropos fenetreAPropos = new APropos();
+            fenetreAPropos.ShowDialog();
+        }
+    }
 
     // ****************************************************//
     // Converter pour effacé les espaces dans les combobox //

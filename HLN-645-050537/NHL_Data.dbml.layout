@@ -76,21 +76,21 @@
         <elementListCompartment Id="cfd1e0dc-ea83-49f9-a4a7-a561dfa37b04" absoluteBounds="3.0149999999999997, 2.21, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5 : 3.23640055338542); (5.75 : 3.23640055338542)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(5 : 3.23640055338542); (5.75 : 3.23640055338542)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NHL_DataDataContext/AdmissionRecord/AdmissionRecord_Extra" />
       <nodes>
         <classShapeMoniker Id="a50a19b0-ee2a-4fab-905f-c54fa2f43779" />
         <classShapeMoniker Id="bd16e0aa-2374-46e5-9fb7-ec38844e5c2b" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.625 : 1.1249995); (4 : 1.1249995); (4 : 1.75)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(5.625 : 1.1249995); (4 : 1.1249995); (4 : 1.75)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NHL_DataDataContext/Bed/Bed_AdmissionRecord" />
       <nodes>
         <classShapeMoniker Id="b3330fd9-4e48-4dc7-bb38-528b8df71934" />
         <classShapeMoniker Id="a50a19b0-ee2a-4fab-905f-c54fa2f43779" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.5 : 2.92390055338542); (3 : 2.92390055338542)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.5 : 2.92390055338542); (3 : 2.92390055338542)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NHL_DataDataContext/Patient/Patient_AdmissionRecord" />
       <nodes>
         <classShapeMoniker Id="e2f94768-71c7-4f19-a001-221d4929ed0a" />

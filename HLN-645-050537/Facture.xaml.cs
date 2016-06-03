@@ -14,14 +14,20 @@ using System.Windows.Shapes;
 
 namespace HLN_645_050537
 {
-    /// <summary>
-    /// Interaction logic for Facture.xaml
-    /// </summary>
     public partial class Facture : Window
     {
-        public Facture()
+        public Facture(AdmissionRecord myfacture, string ladescitem, string lemontant)
         {
             InitializeComponent();
+
+            string nomClient = myfacture.Patient.FirstName.TrimEnd() + " " + myfacture.Patient.LastName.TrimEnd();
+
+            LabelNomPatient.Content = nomClient;
+            LabelAddressPatient.Content = myfacture.Patient.Address;
+            LabelVillePatient.Content = myfacture.Patient.City;
+
+            lableDescFacture.Content = ladescitem;
+            LabelMontantFacture.Content = lemontant;
         }
     }
 }

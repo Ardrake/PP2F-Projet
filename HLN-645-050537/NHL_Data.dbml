@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NLH-645-050537" Class="NHL_DataDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=CABANONS00171;Initial Catalog=NLH-645-050537;Integrated Security=True" SettingsObjectName="HLN_645_050537.Properties.Settings" SettingsPropertyName="NLH_645_050537ConnectionString2" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=ANDRE-PC;Initial Catalog=NLH-645-050537;Integrated Security=True" SettingsObjectName="HLN_645_050537.Properties.Settings" SettingsPropertyName="NLH_645_050537ConnectionString1" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Beds" Member="Beds">
     <Type Name="Bed">
       <Column Name="BedNumber" Type="System.String" DbType="NChar(3) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -125,16 +125,20 @@
       <Column Name="Doctor" Type="System.String" DbType="NChar(4)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.CongePatient" Method="CongePatient">
+    <Parameter Name="AdmissionId" Parameter="admissionId" Type="System.String" DbType="NChar(30)" />
+    <Parameter Name="BedNumber" Parameter="bedNumber" Type="System.String" DbType="NChar(3)" />
+    <Return Type="System.Int32" />
+  </Function>
   <Function Name="dbo.InsereAdmission" Method="InsereAdmission">
     <Parameter Name="AdmissionId" Parameter="admissionId" Type="System.String" DbType="NChar(30)" />
     <Parameter Name="PatientID" Parameter="patientID" Type="System.String" DbType="NChar(15)" />
     <Parameter Name="BedNumber" Parameter="bedNumber" Type="System.String" DbType="NChar(3)" />
     <Parameter Name="AdmitDate" Parameter="admitDate" Type="System.DateTime" DbType="Date" />
-    <Return Type="System.Int32" />
-  </Function>
-  <Function Name="dbo.CongePatient" Method="CongePatient">
-    <Parameter Name="AdmissionId" Parameter="admissionId" Type="System.String" DbType="NChar(30)" />
-    <Parameter Name="BedNumber" Parameter="bedNumber" Type="System.String" DbType="NChar(3)" />
+    <Parameter Name="TV" Parameter="tV" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="Phone" Parameter="phone" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="SemiPrive" Parameter="semiPrive" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="Prive" Parameter="prive" Type="System.Boolean" DbType="Bit" />
     <Return Type="System.Int32" />
   </Function>
 </Database>

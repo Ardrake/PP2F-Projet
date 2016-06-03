@@ -56,6 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="APropos.xaml.cs">
+      <DependentUpon>APropos.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Facture.xaml.cs">
       <DependentUpon>Facture.xaml</DependentUpon>
     </Compile>
@@ -64,6 +67,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>_NLH_645_050537DataSet.xsd</DependentUpon>
     </Compile>
+    <Page Include="APropos.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Facture.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -141,6 +148,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="key-chain.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Northern-Lights.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

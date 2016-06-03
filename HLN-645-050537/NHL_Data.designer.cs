@@ -54,7 +54,7 @@ namespace HLN_645_050537
     #endregion
 		
 		public NHL_DataDataContext() : 
-				base(global::HLN_645_050537.Properties.Settings.Default.NLH_645_050537ConnectionString2, mappingSource)
+				base(global::HLN_645_050537.Properties.Settings.Default.NLH_645_050537ConnectionString1, mappingSource)
 		{
 			OnCreated();
 		}
@@ -176,17 +176,17 @@ namespace HLN_645_050537
 			return this.CreateMethodCallQuery<GetPatientAdmissionResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.InsereAdmission")]
-		public int InsereAdmission([global::System.Data.Linq.Mapping.ParameterAttribute(Name="AdmissionId", DbType="NChar(30)")] string admissionId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PatientID", DbType="NChar(15)")] string patientID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="BedNumber", DbType="NChar(3)")] string bedNumber, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="AdmitDate", DbType="Date")] System.Nullable<System.DateTime> admitDate)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), admissionId, patientID, bedNumber, admitDate);
-			return ((int)(result.ReturnValue));
-		}
-		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.CongePatient")]
 		public int CongePatient([global::System.Data.Linq.Mapping.ParameterAttribute(Name="AdmissionId", DbType="NChar(30)")] string admissionId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="BedNumber", DbType="NChar(3)")] string bedNumber)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), admissionId, bedNumber);
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.InsereAdmission")]
+		public int InsereAdmission([global::System.Data.Linq.Mapping.ParameterAttribute(Name="AdmissionId", DbType="NChar(30)")] string admissionId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PatientID", DbType="NChar(15)")] string patientID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="BedNumber", DbType="NChar(3)")] string bedNumber, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="AdmitDate", DbType="Date")] System.Nullable<System.DateTime> admitDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TV", DbType="Bit")] System.Nullable<bool> tV, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Phone", DbType="Bit")] System.Nullable<bool> phone, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SemiPrive", DbType="Bit")] System.Nullable<bool> semiPrive, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Prive", DbType="Bit")] System.Nullable<bool> prive)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), admissionId, patientID, bedNumber, admitDate, tV, phone, semiPrive, prive);
 			return ((int)(result.ReturnValue));
 		}
 	}
